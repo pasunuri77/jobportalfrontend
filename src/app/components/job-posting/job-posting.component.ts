@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { JobService } from '../../service/job.service';
 import { AuthService } from '../../service/auth.service';
 import { ToastrService } from 'ngx-toastr';
-import { ImageService } from '../../service/image.service';
 
 @Component({
   selector: 'app-job-posting',
@@ -45,7 +44,6 @@ export class JobPostingComponent implements OnInit {
     private jobService: JobService,
     private authService: AuthService,
     private toastr: ToastrService,
-    private imageService: ImageService
   ) {
     // Pre-fill company name and posted date
     const userData = this.authService.getUserData();
@@ -76,7 +74,9 @@ export class JobPostingComponent implements OnInit {
       
       // Set logo preview if available
       if (this.jobData.logo) {
-        this.logoPreview = this.imageService.getImageUrl(this.jobData.logo);
+        this.logoPreview = this.jobData.logo.startsWith('http') ? 
+          this.jobData.logo : 
+          `http://localhost:8080${this.jobData.logo}`;
       }
     }
   }

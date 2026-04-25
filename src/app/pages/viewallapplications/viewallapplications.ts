@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApplicationService } from '../../service/application.service';
 import { JobService } from '../../service/job.service';
-import { ImageService } from '../../service/image.service';
 import { environment } from '../../../environment/environment';
 @Component({
   selector: 'app-viewallapplications',
@@ -22,8 +21,7 @@ export class Viewallapplications implements OnInit {
 
   constructor(private applicationService: ApplicationService,
     private cdr: ChangeDetectorRef,
-    private jobService: JobService,
-    public imageService: ImageService
+    private jobService: JobService
   ) { }
 
   ngOnInit(): void {
