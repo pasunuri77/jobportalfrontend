@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../service/auth.service';
 import { ToastrService } from 'ngx-toastr';
-import { environment } from '../../../environment/environment';
 
 @Component({
   selector: 'app-apply-jobs',
@@ -98,7 +97,7 @@ export class ApplyJobsComponent implements OnInit {
     }
     
     if (typeof logoPath === 'string') {
-      const backendUrl = environment.apiUrl;
+      const backendUrl = 'http://localhost:8080';
       return logoPath.startsWith('/') ? `${backendUrl}${logoPath}` : `${backendUrl}/${logoPath}`;
     }
     

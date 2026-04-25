@@ -7,7 +7,6 @@ import { AuthService } from '../../service/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, interval, takeUntil } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { environment } from '../../../environment/environment';
 
 interface DashboardStats {
   totalUsers: number;
@@ -36,7 +35,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   company: any[] = [];
   jobs: any[] = [];
   applicants: any[] = [];
-  environment = environment;
 
   // Search and filter
   searchUser: string = '';
@@ -569,7 +567,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     if (!logoPath)
       return 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23ddd%22 width=%22100%22 height=%22100%22/%3E%3C/svg%3E';
     if (logoPath.startsWith('http')) return logoPath;
-    const backendUrl = environment.apiUrl;
+    const backendUrl = 'http://localhost:8080';
     return logoPath.startsWith('/') ? `${backendUrl}${logoPath}` : `${backendUrl}/${logoPath}`;
   }
 

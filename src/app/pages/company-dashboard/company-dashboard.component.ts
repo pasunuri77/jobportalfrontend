@@ -8,7 +8,6 @@ import { ToastrService } from 'ngx-toastr';
 import { JobPostingComponent } from '../../components/job-posting/job-posting.component';
 import { HeaderComponent } from '../../layout/header/header.component';
 import { Viewallapplications } from '../viewallapplications/viewallapplications';
-import { environment } from '../../../environment/environment';
 
 @Component({
   selector: 'app-company-dashboard',
@@ -214,7 +213,7 @@ export class CompanyDashboardComponent implements OnInit {
   getLogoUrl(path: string): string {
     if (!path) return '';
 
-    const base = environment.apiUrl;
+    const base = 'http://localhost:8080';
 
     return path.startsWith('http')
       ? path

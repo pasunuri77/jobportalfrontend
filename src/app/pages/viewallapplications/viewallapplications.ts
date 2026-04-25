@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApplicationService } from '../../service/application.service';
 import { JobService } from '../../service/job.service';
-import { environment } from '../../../environment/environment';
 @Component({
   selector: 'app-viewallapplications',
   standalone: true,
@@ -17,7 +16,6 @@ export class Viewallapplications implements OnInit {
   expandedJobs: Set<number> = new Set();
   isLoading: boolean = true;
   errorMessage: string = '';
-  environment = environment;
 
   constructor(private applicationService: ApplicationService,
     private cdr: ChangeDetectorRef,

@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { JobService } from '../../service/job.service';
 import { AuthService } from '../../service/auth.service';
 import { ToastrService } from 'ngx-toastr';
-import { environment } from '../../../environment/environment';
 
 @Component({
   selector: 'app-job-posting',
@@ -77,7 +76,7 @@ export class JobPostingComponent implements OnInit {
       if (this.jobData.logo) {
         this.logoPreview = this.jobData.logo.startsWith('http') ? 
           this.jobData.logo : 
-          `${environment.apiUrl}${this.jobData.logo}`;
+          `http://localhost:8080${this.jobData.logo}`;
       }
     }
   }

@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../service/auth.service';
 import {ToastrService} from 'ngx-toastr';
-import { environment } from '../../../environment/environment';
 @Component({
   selector: 'app-companies',
   standalone: true,
@@ -127,7 +126,7 @@ export class CompaniesComponent  {
     
     // If it's a string path, prepend backend URL
     if (typeof logoPath === 'string') {
-      const backendUrl = environment.apiUrl;
+      const backendUrl = 'http://localhost:8080';
       return logoPath.startsWith('/') ? `${backendUrl}${logoPath}` : `${backendUrl}/${logoPath}`;
     }
     
