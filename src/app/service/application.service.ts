@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+import { environment } from "../../environment/environment";
 
 @Injectable({
     providedIn: 'root'
@@ -8,7 +9,7 @@ import { Observable } from "rxjs";
 
 export class ApplicationService {
 
-    private apiUrl='https://jobportalbackend-fowp.onrender.com/api/application';
+    private apiUrl=environment.apiUrl + '/api/application';
 
     constructor(
         private http:HttpClient

@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environment/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'https://jobportalbackend-fowp.onrender.com'; // Update this to match your backend URL
+  private apiUrl = environment.apiUrl; // Update this to match your backend URL
 
   constructor(private http: HttpClient) { }
 
@@ -14,6 +15,7 @@ export class AuthService {
   login(credentials: { email: string; password: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/api/user/login`, credentials);
   }
+
 
   register(userData: { name: string; email: string; password: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/api/user/register`, userData);
