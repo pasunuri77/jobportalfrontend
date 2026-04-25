@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8080'; // Update this to match your backend URL
+  private apiUrl = 'https://jobportalbackend-fowp.onrender.com'; // Update this to match your backend URL
 
   constructor(private http: HttpClient) { }
 

@@ -8,7 +8,7 @@ import { Observable } from "rxjs";
 
 export class ApplicationService {
 
-    private apiUrl='http://localhost:8080/api/application';
+    private apiUrl='https://jobportalbackend-fowp.onrender.com/api/application';
 
     constructor(
         private http:HttpClient
