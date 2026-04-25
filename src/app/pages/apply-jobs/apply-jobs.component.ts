@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../service/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { ImageService } from '../../service/image.service';
 
 @Component({
   selector: 'app-apply-jobs',
@@ -21,7 +22,8 @@ export class ApplyJobsComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private toastr: ToastrService,
-    private cdr:ChangeDetectorRef
+    private cdr:ChangeDetectorRef,
+    private imageService: ImageService
   ) {}
 
   ngOnInit(): void {
@@ -85,27 +87,12 @@ export class ApplyJobsComponent implements OnInit {
     }
   }
 
-  getLogoUrl(logoPath: any): string {
-    if (!logoPath) return '';
-    
-    if (typeof logoPath === 'string' && logoPath.startsWith('http')) {
-      return logoPath;
-    }
-    
-    if (typeof logoPath === 'object' && logoPath.url) {
-      return logoPath.url;
-    }
-    
-    if (typeof logoPath === 'string') {
-      const backendUrl = 'http://localhost:8080';
-      return logoPath.startsWith('/') ? `${backendUrl}${logoPath}` : `${backendUrl}/${logoPath}`;
-    }
-    
-    return '';
+  getLogoUrl(logoPath: string): string {
+    return this.imageService.getLogoUrl(logoPath);
   }
 
   onImageError(event: any): void {
-    event.target.style.display = 'none';
+    this.imageService.onImageError(event);
   }
 
   formatJobType(type: string): string {

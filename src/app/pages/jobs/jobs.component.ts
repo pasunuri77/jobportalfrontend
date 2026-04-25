@@ -5,6 +5,7 @@ import { AuthService } from '../../service/auth.service';
 import { JobApplicationModalComponent } from '../../components/job-application-modal/job-application-modal.component';
 import se from '@angular/common/locales/se';
 import { ToastrService } from 'ngx-toastr';
+import { ImageService } from '../../service/image.service';
 
 @Component({
   selector: 'app-jobs',
@@ -29,7 +30,8 @@ export class JobsComponent {
   constructor(
     private authService: AuthService,
     private cdr: ChangeDetectorRef,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private imageService: ImageService
   ) { }
 
   ngOnInit(): void {
@@ -96,30 +98,11 @@ export class JobsComponent {
     this.loadUserApplications();
   }
 
-  getLogoUrl(logoPath: any): string {
-    if (!logoPath) return '';
-    
-    // If it's already a full URL, return as is
-    if (typeof logoPath === 'string' && logoPath.startsWith('http')) {
-      return logoPath;
-    }
-    
-    // If it's an object with url property
-    if (typeof logoPath === 'object' && logoPath.url) {
-      return logoPath.url;
-    }
-    
-    // If it's a string path, prepend backend URL
-    if (typeof logoPath === 'string') {
-      const backendUrl = 'http://localhost:8080';
-      return logoPath.startsWith('/') ? `${backendUrl}${logoPath}` : `${backendUrl}/${logoPath}`;
-    }
-    
-    return '';
+  getLogoUrl(logoPath: string): string {
+    return this.imageService.getLogoUrl(logoPath);
   }
 
   onImageError(event: any): void {
-    // Hide the broken image
-    event.target.style.display = 'none';
+    this.imageService.onImageError(event);
   }
 }

@@ -7,6 +7,8 @@ import { AuthService } from '../../service/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, interval, takeUntil } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { ImageService } from '../../service/image.service';
+import { environment } from '../../../environment/environment';
 
 interface DashboardStats {
   totalUsers: number;
@@ -35,6 +37,14 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   company: any[] = [];
   jobs: any[] = [];
   applicants: any[] = [];
+  environment = environment;
+
+  constructor(
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef,
+    private toastr: ToastrService,
+    public imageService: ImageService
+  ) {}
 
   // Search and filter
   searchUser: string = '';
@@ -92,12 +102,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   // Expanded items
   expandedJobs: Set<number> = new Set();
 
-  constructor(
-    private authService: AuthService,
-    private cdr: ChangeDetectorRef,
-    private toastr: ToastrService,
-  ) {}
-
+  
   ngOnInit() {
     this.loadAllData();
 
@@ -564,11 +569,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
    * Get company logo URL
    */
   getLogoUrl(logoPath: string): string {
-    if (!logoPath)
-      return 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23ddd%22 width=%22100%22 height=%22100%22/%3E%3C/svg%3E';
-    if (logoPath.startsWith('http')) return logoPath;
-    const backendUrl = 'http://localhost:8080';
-    return logoPath.startsWith('/') ? `${backendUrl}${logoPath}` : `${backendUrl}/${logoPath}`;
+    return this.imageService.getLogoUrl(logoPath);
   }
 
   /**

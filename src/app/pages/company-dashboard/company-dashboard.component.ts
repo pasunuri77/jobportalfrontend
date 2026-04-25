@@ -8,6 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { JobPostingComponent } from '../../components/job-posting/job-posting.component';
 import { HeaderComponent } from '../../layout/header/header.component';
 import { Viewallapplications } from '../viewallapplications/viewallapplications';
+import { ImageService } from '../../service/image.service';
 
 @Component({
   selector: 'app-company-dashboard',
@@ -45,7 +46,8 @@ export class CompanyDashboardComponent implements OnInit {
     private jobService: JobService,
     private cdr: ChangeDetectorRef,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    private imageService: ImageService
   ) {}
 
   ngOnInit(): void {
@@ -211,17 +213,11 @@ export class CompanyDashboardComponent implements OnInit {
   // ===============================
 
   getLogoUrl(path: string): string {
-    if (!path) return '';
-
-    const base = 'http://localhost:8080';
-
-    return path.startsWith('http')
-      ? path
-      : `${base}${path.startsWith('/') ? '' : '/'}${path}`;
+    return this.imageService.getLogoUrl(path);
   }
 
   onImageError(event: any): void {
-    event.target.style.display = 'none';
+    this.imageService.onImageError(event);
   }
 
   // ===============================

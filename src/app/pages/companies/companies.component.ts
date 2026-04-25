@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../service/auth.service';
 import {ToastrService} from 'ngx-toastr';
+import { ImageService } from '../../service/image.service';
 @Component({
   selector: 'app-companies',
   standalone: true,
@@ -83,7 +84,7 @@ export class CompaniesComponent  {
   
   selectedCompany: any; // Declare without initialization
 
-  constructor(private authService: AuthService,private cdr: ChangeDetectorRef,private toastr: ToastrService) { }
+  constructor(private authService: AuthService,private cdr: ChangeDetectorRef,private toastr: ToastrService, private imageService: ImageService) { }
 
   ngOnInit(): void {
     this.authService.getAllCompanies().subscribe({
@@ -111,30 +112,11 @@ export class CompaniesComponent  {
     return Math.floor(rating);
   }
 
-  getLogoUrl(logoPath: any): string {
-    if (!logoPath) return '';
-    
-    // If it's already a full URL, return as is
-    if (typeof logoPath === 'string' && logoPath.startsWith('http')) {
-      return logoPath;
-    }
-    
-    // If it's an object with url property
-    if (typeof logoPath === 'object' && logoPath.url) {
-      return logoPath.url;
-    }
-    
-    // If it's a string path, prepend backend URL
-    if (typeof logoPath === 'string') {
-      const backendUrl = 'http://localhost:8080';
-      return logoPath.startsWith('/') ? `${backendUrl}${logoPath}` : `${backendUrl}/${logoPath}`;
-    }
-    
-    return '';
+  getLogoUrl(logoPath: string): string {
+    return this.imageService.getLogoUrl(logoPath);
   }
 
   onImageError(event: any): void {
-    // Hide the broken image
-    event.target.style.display = 'none';
+    this.imageService.onImageError(event);
   }
 }
