@@ -37,14 +37,9 @@ export class JobService {
 
   updateStatus(applicationId: number, status: string) {
     return this.http.put(
-      `${environment.apiUrl}/api/application/status/${applicationId}?status=${status}`,
+      `${environment.apiUrl}/api/application/${applicationId}/status?status=${status}`,
       {}
     );
   }
-
-
-
-
-
 
 }
