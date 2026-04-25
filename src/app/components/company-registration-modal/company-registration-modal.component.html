@@ -1,0 +1,178 @@
+<!-- Modal Overlay -->
+<div class="modal-overlay" *ngIf="isOpen" (click)="closeModal()">
+  <!-- Modal Content -->
+  <div class="modal-content" (click)="onModalClick($event)">
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <h3>Register Your Company</h3>
+      <button class="close-btn" (click)="closeModal()" aria-label="Close modal">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="modal-body">
+      <form [formGroup]="companyForm" (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+          <!-- Company Name -->
+          <div class="form-group">
+            <label for="modal-name">Company Name *</label>
+            <input 
+              type="text" 
+              id="modal-name" 
+              formControlName="name" 
+              placeholder="Enter company name"
+              [class.error]="companyForm.get('name')?.invalid && companyForm.get('name')?.touched"
+            >
+            <span class="error-message" *ngIf="companyForm.get('name')?.invalid && companyForm.get('name')?.touched">
+              Company name is required
+            </span>
+          </div>
+
+          <!-- Industry -->
+          <div class="form-group">
+            <label for="modal-industry">Industry *</label>
+            <select 
+              id="modal-industry" 
+              formControlName="industry"
+              [class.error]="companyForm.get('industry')?.invalid && companyForm.get('industry')?.touched"
+            >
+              <option value="">Select industry</option>
+              <option value="Technology">Technology</option>
+              <option value="Healthcare">Healthcare</option>
+              <option value="Finance">Finance</option>
+              <option value="Education">Education</option>
+              <option value="Manufacturing">Manufacturing</option>
+              <option value="Retail">Retail</option>
+              <option value="Consulting">Consulting</option>
+              <option value="Other">Other</option>
+            </select>
+            <span class="error-message" *ngIf="companyForm.get('industry')?.invalid && companyForm.get('industry')?.touched">
+              Please select an industry
+            </span>
+          </div>
+
+          <!-- Location -->
+          <div class="form-group">
+            <label for="modal-location">Location *</label>
+            <input 
+              type="text" 
+              id="modal-location" 
+              formControlName="location" 
+              placeholder="City, Country"
+              [class.error]="companyForm.get('location')?.invalid && companyForm.get('location')?.touched"
+            >
+            <span class="error-message" *ngIf="companyForm.get('location')?.invalid && companyForm.get('location')?.touched">
+              Location is required
+            </span>
+          </div>
+
+          <!-- Company Size -->
+          <div class="form-group">
+            <label for="modal-size">Company Size *</label>
+            <select 
+              id="modal-size" 
+              formControlName="size"
+              [class.error]="companyForm.get('size')?.invalid && companyForm.get('size')?.touched"
+            >
+              <option value="">Select size</option>
+              <option value="1-10">1-10 employees</option>
+              <option value="11-50">11-50 employees</option>
+              <option value="51-200">51-200 employees</option>
+              <option value="201-500">201-500 employees</option>
+              <option value="501-1000">501-1000 employees</option>
+              <option value="1000+">1000+ employees</option>
+            </select>
+            <span class="error-message" *ngIf="companyForm.get('size')?.invalid && companyForm.get('size')?.touched">
+              Please select company size
+            </span>
+          </div>
+
+          <!-- Open Positions -->
+          <div class="form-group">
+            <label for="modal-open_positions">Open Positions *</label>
+            <input 
+              type="number" 
+              id="modal-open_positions" 
+              formControlName="open_positions" 
+              placeholder="Number of open positions"
+              min="0"
+              [class.error]="companyForm.get('open_positions')?.invalid && companyForm.get('open_positions')?.touched"
+            >
+            <span class="error-message" *ngIf="companyForm.get('open_positions')?.invalid && companyForm.get('open_positions')?.touched">
+              Valid number required
+            </span>
+          </div>
+
+          <!-- Rating -->
+          <div class="form-group">
+            <label for="modal-rating">Company Rating (0-5)</label>
+            <input 
+              type="number" 
+              id="modal-rating" 
+              formControlName="rating" 
+              placeholder="0-5"
+              min="0"
+              max="5"
+              step="0.1"
+              [class.error]="companyForm.get('rating')?.invalid && companyForm.get('rating')?.touched"
+            >
+            <span class="error-message" *ngIf="companyForm.get('rating')?.invalid && companyForm.get('rating')?.touched">
+              Rating must be between 0 and 5
+            </span>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group full-width">
+          <label for="modal-description">Company Description *</label>
+          <textarea 
+            id="modal-description" 
+            formControlName="description" 
+            placeholder="Describe your company, culture, and what makes it special..."
+            rows="3"
+            [class.error]="companyForm.get('description')?.invalid && companyForm.get('description')?.touched"
+          ></textarea>
+          <span class="error-message" *ngIf="companyForm.get('description')?.invalid && companyForm.get('description')?.touched">
+            Description is required
+          </span>
+        </div>
+
+        <!-- Logo Upload -->
+        <div class="form-group full-width">
+          <label for="modal-logo">Company Logo</label>
+          <input 
+            type="file" 
+            id="modal-logo" 
+            (change)="onFileSelect($event)"
+            accept="image/*"
+          >
+          <small>Optional: Upload your company logo</small>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="form-actions">
+          <button 
+            type="button" 
+            class="btn-cancel" 
+            (click)="closeModal()"
+            [disabled]="isSubmitting"
+          >
+            Cancel
+          </button>
+          <button 
+            type="submit" 
+            class="btn-submit" 
+            [disabled]="isSubmitting || companyForm.invalid"
+          >
+            <span *ngIf="!isSubmitting">Register Company</span>
+            <span *ngIf="isSubmitting">Registering...</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

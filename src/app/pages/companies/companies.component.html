@@ -1,0 +1,90 @@
+<div class="companies-container">
+  <div class="companies-header">
+    <h1>Companies</h1>
+    <p class="companies-subtitle">Explore top companies and job opportunities</p>
+  </div>
+
+  <div class="companies-content">
+    <div class="companies-list">
+      <div class="company-card" 
+           *ngFor="let company of company" 
+           [class.active]="selectedCompany.id === company.id"
+           (click)="selectCompany(company)">
+        <div class="company-logo">
+          <img [src]="getLogoUrl(company.logo)" [alt]="company.name" (error)="onImageError($event)" />
+        </div>
+        <div class="company-info">
+          <h3>{{ company.name }}</h3>
+          <p class="industry">{{ company.industry }}</p>
+          <p class="location">{{ company.location }}</p>
+          <div class="company-meta">
+            <span class="size">{{ company.size }}</span>
+            <span class="positions">{{ company.openPositions }} positions</span>
+          </div>
+        </div>
+        <div class="company-rating">
+          <span class="rating-stars">
+            <span class="star" *ngFor="let star of [1,2,3,4,5]" 
+                  [class.filled]="star <= getRatingFloor(company.rating)">★</span>
+          </span>
+          <span class="rating-value">{{ company.rating }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="company-details" *ngIf="selectedCompany">
+      <div class="detail-card">
+        <div class="detail-header">
+          <div class="detail-logo">
+            <img [src]="getLogoUrl(selectedCompany.logo)" [alt]="selectedCompany.name" (error)="onImageError($event)" />
+          </div>
+          <div class="detail-info">
+            <h2>{{ selectedCompany.name }}</h2>
+            <p class="industry">{{ selectedCompany.industry }}</p>
+            <div class="detail-meta">
+              <span class="location">{{ selectedCompany.location }}</span>
+              <span class="size">{{ selectedCompany.size }} employees</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-content">
+          <div class="detail-section">
+            <h3>About Company</h3>
+            <p>{{ selectedCompany.description }}</p>
+          </div>
+
+          <div class="detail-section">
+            <h3>Company Information</h3>
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">Industry:</span>
+                <span class="info-value">{{ selectedCompany.industry }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Location:</span>
+                <span class="info-value">{{ selectedCompany.location }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Size:</span>
+                <span class="info-value">{{ selectedCompany.size }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Rating:</span>
+                <span class="info-value">{{ selectedCompany.rating }}/5.0</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <h3>Open Positions</h3>
+            <div class="positions-summary">
+              <span class="positions-count">{{ selectedCompany.openPositions }}</span>
+              <span class="positions-text">open positions available</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

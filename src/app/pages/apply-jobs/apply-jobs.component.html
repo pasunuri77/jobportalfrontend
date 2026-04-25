@@ -1,0 +1,86 @@
+<div class="apply-jobs-container">
+  <div class="apply-jobs-header">
+    <h1>Applied Jobs</h1>
+    <p class="subtitle">View and manage your job applications</p>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-state" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Loading jobs...</p>
+  </div>
+
+  <!-- Jobs List -->
+  <div class="jobs-content" *ngIf="!isLoading">
+    <div class="results-count" *ngIf="filteredJobs.length > 0">
+      <p>Found {{ filteredJobs.length }} job{{ filteredJobs.length !== 1 ? 's' : '' }}</p>
+    </div>
+
+    <div class="jobs-grid" *ngIf="filteredJobs.length > 0">
+      <div class="job-card" *ngFor="let job of filteredJobs">
+        <div class="job-header">
+          <div class="company-logo">
+            <img 
+              [src]="getLogoUrl(job.job?.logo || job.logo)" 
+              [alt]="job.job?.companyName || job.companyName" 
+              (error)="onImageError($event)"
+            />
+            <div *ngIf="!(job.job?.logo || job.logo)" class="logo-placeholder">
+              {{ (job.job?.companyName || job.companyName)?.charAt(0) || 'C' }}
+            </div>
+          </div>
+          <div class="job-info">
+            <h3 class="job-title">{{ job.job?.title || job.title }}</h3>
+            <p class="company-name">{{ job.job?.companyName || job.companyName }}</p>
+            <p class="location">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              {{ job.job?.location || job.location }}
+            </p>
+          </div>
+          <div class="job-type-badge" [ngClass]="'badge-' + (job.job?.type?.toLowerCase().replace('_', '-') || job.type?.toLowerCase().replace('_', '-'))">
+            {{ formatJobType(job.job?.type || job.type) }}
+          </div>
+        </div>
+
+        
+        <div class="job-requirements" *ngIf="(job.job?.requirements || job.requirements) && (job.job?.requirements || job.requirements).length > 0">
+          <h4>Requirements:</h4>
+          <ul>
+            <li *ngFor="let req of (job.job?.requirements || job.requirements)">{{ req }}</li>
+          </ul>
+        </div>
+
+        <div class="job-footer">
+          <div class="application-info">
+            <div class="application-status" [ngClass]="'status-' + (job.status?.toLowerCase() || 'pending')">
+              {{ job.status || 'Pending' }}
+            </div>
+            <div class="application-date" *ngIf="job.appliedDate">
+              Applied: {{ formatDate(job.appliedDate) }}
+            </div>
+          </div>
+          <div class="application-actions">
+            <button class="view-btn" (click)="viewApplicationDetails(job)">
+              View Details
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="filteredJobs.length === 0">
+      <div class="empty-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+        </svg>
+      </div>
+      <h3>No applications found</h3>
+      <p>You haven't applied to any jobs yet. Start browsing and applying for opportunities!</p>
+    </div>
+  </div>
+</div>

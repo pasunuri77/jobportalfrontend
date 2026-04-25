@@ -1,0 +1,9 @@
+<div class="dashboard-layout">
+  <app-header></app-header>
+  <div class="dashboard-content">
+    <app-sidebar (sidebarToggle)="onSidebarToggle($event)"></app-sidebar>
+    <main class="main-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

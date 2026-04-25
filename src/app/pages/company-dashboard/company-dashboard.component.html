@@ -1,0 +1,265 @@
+<div class="dashboard-container">
+  <app-header></app-header>
+
+  <main class="main-content">
+    <!-- No Company State -->
+    <div class="loading-state" *ngIf="!company">
+      <p>No company found</p>
+      <div *ngIf="showRegistrationLink" class="registration-link-container">
+        <p>Company not registered yet?</p>
+        <a (click)="navigateToRegistration()" class="registration-link">
+          Register your company here
+        </a>
+      </div>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-content" *ngIf="company">
+      <!-- Header Section -->
+      <div class="dashboard-header">
+        <div class="company-header-info">
+          <div class="company-logo">
+            <img *ngIf="company.logo" [src]="getLogoUrl(company.logo)" [alt]="company.name + ' logo'"
+              (error)="onImageError($event)" />
+            <div *ngIf="!company.logo" class="avatar-placeholder">
+              {{ company.name ? company.name.charAt(0) : '' }}
+            </div>
+          </div>
+          <div class="company-title">
+            <h1>{{ company.name }}</h1>
+            <p class="company-tagline">{{ company.description }}</p>
+          </div>
+        </div>
+        <div class="welcome-message">
+          <p>
+            Welcome back, <strong>{{ company.user?.name }}</strong>!
+          </p>
+        </div>
+      </div>
+
+      <!-- Stats Overview -->
+      <div class="stats-grid">
+        <div class="stat-card primary">
+          <div class="stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="8.5" cy="7" r="4"></circle>
+              <line x1="20" y1="8" x2="20" y2="14"></line>
+              <line x1="23" y1="11" x2="17" y2="11"></line>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <h3>{{ company.openPositions || 0 }}</h3>
+            <p>Open Positions</p>
+          </div>
+        </div>
+
+        <div class="stat-card success">
+          <div class="stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <h3>{{ company.rating || 0 }}/5.0</h3>
+            <p>Company Rating</p>
+          </div>
+        </div>
+
+        <div class="stat-card info">
+          <div class="stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <h3>{{ company.size || 'Not specified' }}</h3>
+            <p>Company Size</p>
+          </div>
+        </div>
+
+        <div class="stat-card warning">
+          <div class="stat-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <h3>{{ company.location }}</h3>
+            <p>Location</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Company Details Cards -->
+      <div class="details-section">
+        <div class="card">
+          <div class="card-header">
+            <h3>Company Information</h3>
+          </div>
+          <div class="card-content">
+            <div class="info-grid">
+              <div class="info-item">
+                <label>Industry</label>
+                <p>{{ company.industry }}</p>
+              </div>
+              <div class="info-item">
+                <label>Company Size</label>
+                <p>{{ company.size }}</p>
+              </div>
+              <div class="info-item">
+                <label>Location</label>
+                <p>{{ company.location }}</p>
+              </div>
+              <div class="info-item">
+                <label>Rating</label>
+                <div class="rating">
+                  <span class="rating-value">{{ company.rating }}/5.0</span>
+                  <div class="stars">
+                    <!-- <span class="star" *ngFor="let star of [].constructor(5); let i = index" 
+                          [class.filled]="i < Math.floor(company.rating)">★</span> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="description">
+              <label>Description</label>
+              <p>{{ company.description }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3>User Account</h3>
+          </div>
+          <div class="card-content">
+            <div class="user-info">
+              <div class="user-avatar">
+                <div class="avatar-placeholder">{{ company.user?.name?.charAt(0) || 'U' }}</div>
+              </div>
+              <div class="user-details">
+                <h4>{{ company.user?.name }}</h4>
+                <p>{{ company.user?.email }}</p>
+                <span class="role-badge">{{ company.user?.role }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="quick-actions">
+        <h3>Quick Actions</h3>
+        <div class="action-buttons">
+          <button class="btn btn-primary" (click)="toggleJobForm()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Post New Job
+          </button>
+          <button class="btn btn-outline" (click)="toggleApplications()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            View Applications
+          </button>
+          <button class="btn btn-outline" (click)="toggleJobs()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+            </svg>
+            View Jobs
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Job Posting Component -->
+    <div *ngIf="showJobForm" class="job-form-overlay">
+      <div class="job-form-container">
+        <div class="job-form-header">
+          <h3>Post a New Job</h3>
+          <button class="close-btn" (click)="toggleJobForm()">✕</button>
+        </div>
+        <app-job-posting [jobData]="selectedJobForUpdate" (jobUpdated)="onJobUpdated()"></app-job-posting>
+      </div>
+    </div>
+
+    <!-- Applications Component -->
+    <div *ngIf="showApplications" class="job-form-overlay">
+      <div class="job-form-container">
+        <div class="job-form-header">
+          <h3>View Applications</h3>
+          <button class="close-btn" (click)="toggleApplications()">✕</button>
+        </div>
+        <app-viewallapplications></app-viewallapplications>
+      </div>
+    </div>
+
+    <!-- Jobs List Component -->
+    <div *ngIf="showJobs" class="job-form-overlay">
+      <div class="job-form-container">
+        <div class="job-form-header">
+          <h3>Posted Jobs</h3>
+          <button class="close-btn" (click)="toggleJobs()">✕</button>
+        </div>
+        <div class="jobs-list-container">
+          <div *ngIf="postedJobs.length === 0" class="empty-jobs">
+            <p>No jobs posted yet. <span (click)="toggleJobForm(); toggleJobs()" class="link">Post a new job</span></p>
+          </div>
+          <div *ngIf="postedJobs.length > 0" class="jobs-list">
+            <div class="job-item-list" *ngFor="let job of postedJobs">
+              <div class="job-item-info">
+                <div class="job-item-header">
+                  <h4>{{ job.title }}</h4>
+                </div>
+                <div class="job-item-details">
+                  <span class="job-detail"><strong>Company:</strong> {{ job.companyName }}</span>
+                  <span class="job-detail"><strong>Location:</strong> {{ job.location }}</span>
+                  <span class="job-detail"><strong>Salary:</strong> {{ job.salary }}</span>
+
+                </div>
+              </div>
+              <div class="job-item-actions" style="display: block;">
+                <div style="margin-left: -395px;">
+                  <span class="job-type-badge" [ngClass]="'badge-' + job.type?.toLowerCase()">
+                    {{ job.type }}
+                  </span>
+                </div>
+                <div style="display: flex;padding: 10px; gap: 10px;">
+                  <button class="update-btn" (click)="updateJob(job)" title="Update this job">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                    Update
+                  </button>
+                  <button class="delete-btn" (click)="deleteJob(job.id)" title="Delete this job">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                      <line x1="10" y1="11" x2="10" y2="17"></line>
+                      <line x1="14" y1="11" x2="14" y2="17"></line>
+                    </svg>
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <router-outlet></router-outlet>
+  </main>
+</div>

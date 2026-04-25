@@ -1,0 +1,95 @@
+<div class="modal-overlay" *ngIf="show" (click)="onOverlayClick($event)">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <h2>Apply for Position</h2>
+      <button class="close-btn" (click)="onClose()" title="Close">×</button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Job Information -->
+      <div class="job-info-section">
+        <h3>{{ job?.title }}</h3>
+        <p class="company-name">{{ job?.companyName }}</p>
+        <p class="job-meta">
+          <span class="location">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                  {{ job?.location }}
+                </span>
+          <span class="type">💼 {{ job?.type }}</span>
+          <span class="salary">💰 {{ job?.salary }}</span>
+        </p>
+      </div>
+
+      <!-- Application Form -->
+      <form class="application-form" (ngSubmit)="onSubmit()">
+        <!-- Contact Information -->
+        <div class="form-section">
+          <h4>Contact Information</h4>
+          
+          <div class="form-group">
+            <label for="email">Email Address *</label>
+            <input 
+              type="email" 
+              id="email" 
+              [(ngModel)]="applicantEmail" 
+              name="email"
+              class="form-control"
+              placeholder="Enter your email address"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- Resume Upload -->
+        <div class="form-section">
+          <h4>Resume *</h4>
+          <div class="resume-upload">
+            <div class="upload-area" *ngIf="!selectedResume">
+              <input 
+                type="file" 
+                id="resumeFile" 
+                (change)="onResumeSelect($event)"
+                accept=".pdf,.doc,.docx"
+                class="file-input"
+                required
+              />
+              <label for="resumeFile" class="upload-label">
+                <div class="upload-icon">📄</div>
+                <p>Click to upload your resume</p>
+                <small>PDF, DOC, DOCX (Max 10MB)</small>
+              </label>
+            </div>
+            
+            <div class="resume-preview" *ngIf="selectedResume">
+              <div class="resume-info">
+                <div class="resume-icon">📄</div>
+                <div class="resume-details">
+                  <p class="resume-name">{{ resumePreview }}</p>
+                  <small class="resume-size">{{ selectedResume.size ? (selectedResume.size / 1024 / 1024).toFixed(2) + ' MB' : '' }}</small>
+                </div>
+                <button type="button" class="remove-btn" (click)="removeResume()" title="Remove resume">×</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        
+        <!-- Submit Button -->
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" (click)="onClose()">Cancel</button>
+          <button 
+            type="submit" 
+            class="btn btn-primary"
+            [disabled]="isSubmitting || !applicantEmail || !selectedResume"
+          >
+            <span *ngIf="!isSubmitting">Submit Application</span>
+            <span *ngIf="isSubmitting">Submitting...</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

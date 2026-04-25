@@ -1,0 +1,21 @@
+.users-container {
+  padding: 1rem;
+}
+
+.users-container h2 {
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.users-container p {
+  color: #6c757d;
+  margin-bottom: 2rem;
+}
+
+.users-list {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  text-align: center;
+}

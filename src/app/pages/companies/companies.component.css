@@ -1,0 +1,349 @@
+.companies-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #f8fafc;
+  min-height: 100vh;
+}
+
+.companies-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.companies-header h1 {
+  color: #1f2937;
+  margin: 0 0 0.5rem 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.companies-subtitle {
+  color: #6b7280;
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 400;
+}
+
+.companies-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.companies-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.company-card {
+  background: white;
+  border-radius: 15px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.company-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.company-card:hover::before {
+  left: 100%;
+}
+
+.company-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(102, 126, 234, 0.15);
+}
+
+.company-card.active {
+  border-color: #667eea;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+}
+
+.company-logo img {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.company-info {
+  flex: 1;
+}
+
+.company-info h3 {
+  color: #1f2937;
+  margin: 0 0 0.25rem 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.company-info .industry {
+  color: #667eea;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+.company-info .location {
+  color: #6b7280;
+  margin: 0 0 0.5rem 0;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.company-meta {
+  display: flex;
+  gap: 1rem;
+}
+
+.company-meta .size {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  padding: 0.35rem 0.75rem;
+  border-radius: 15px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+}
+
+.company-meta .positions {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  padding: 0.35rem 0.75rem;
+  border-radius: 15px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+}
+
+.company-rating {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.rating-stars {
+  color: #ddd;
+  font-size: 0.9rem;
+}
+
+.rating-stars .star.filled {
+  color: #ffc107;
+}
+
+.rating-value {
+  color: #666;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.company-details {
+  position: sticky;
+  top: 80px;
+  height: fit-content;
+}
+
+.detail-card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  border: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+.detail-header {
+  padding: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.detail-logo img {
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  background: white;
+  object-fit: contain;
+}
+
+.detail-info h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.detail-info .industry {
+  margin: 0 0 1rem 0;
+  opacity: 0.9;
+}
+
+.detail-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.detail-content {
+  padding: 2rem;
+}
+
+.detail-section {
+  margin-bottom: 2rem;
+}
+
+.detail-section:last-child {
+  margin-bottom: 0;
+}
+
+.detail-section h3 {
+  color: #1f2937;
+  margin: 0 0 1rem 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  position: relative;
+  padding-left: 1rem;
+}
+
+.detail-section h3::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 20px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 2px;
+}
+
+.detail-section p {
+  color: #4b5563;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+  border-radius: 10px;
+  border: 1px solid rgba(102, 126, 234, 0.1);
+  transition: all 0.3s ease;
+}
+
+.info-item:hover {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(118, 75, 162, 0.08));
+  transform: translateY(-1px);
+}
+
+.info-label {
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.info-value {
+  color: #1f2937;
+  font-weight: 700;
+}
+
+.positions-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.positions-count {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #667eea;
+}
+
+.positions-text {
+  color: #555;
+}
+
+.view-jobs-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.view-jobs-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+@media (max-width: 1024px) {
+  .companies-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .company-details {
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  .companies-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .detail-header {
+    padding: 1.5rem;
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .detail-content {
+    padding: 1.5rem;
+  }
+  
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+}

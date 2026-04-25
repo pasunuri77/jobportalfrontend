@@ -1,0 +1,577 @@
+<div class="admin-dashboard-container">
+  <app-header></app-header>
+
+  <main class="admin-main-content">
+    <!-- Dashboard Header with Refresh -->
+    <div class="dashboard-header-section">
+      <div class="dashboard-header">
+        <div>
+          <h1>Admin Dashboard</h1>
+          <p>Real-time system administration and management</p>
+        </div>
+        <div class="header-actions">
+          <button class="refresh-btn" (click)="refreshData()" title="Refresh data">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" [class.spinning]="isRefreshing">
+              <polyline points="23 4 23 10 17 10"></polyline>
+              <polyline points="1 20 1 14 7 14"></polyline>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36M20.49 15a9 9 0 0 1-14.85 3.36"></path>
+            </svg>
+            Refresh
+          </button>
+          <span class="last-updated">Last updated: {{ lastUpdated | date: 'short' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dashboard Statistics Cards -->
+    <div class="dashboard-stats">
+      <div class="stat-card clickable" (click)="toggleUsers()">
+        <div class="stat-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+        </div>
+        <h3>Total Users</h3>
+        <p class="stat-number">{{ user.length }}</p>
+        <small class="toggle-hint">Click to {{ showUsers ? 'hide' : 'show' }} users list</small>
+      </div>
+      <div class="stat-card clickable" (click)="toggleCompanies()">
+        <div class="stat-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+            <path d="M9 22v-4h6v4"></path>
+            <path d="M8 6h.01"></path>
+            <path d="M16 6h.01"></path>
+            <path d="M8 10h.01"></path>
+            <path d="M16 10h.01"></path>
+            <path d="M8 14h.01"></path>
+            <path d="M16 14h.01"></path>
+          </svg>
+        </div>
+        <h3>Total Companies</h3>
+        <p class="stat-number">{{ company.length }}</p>
+        <small class="toggle-hint">Click to {{ showCompanies ? 'hide' : 'show' }} companies list</small>
+      </div>
+      <div class="stat-card clickable" (click)="toggleJobs()">
+        <div class="stat-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+        </div>
+        <h3>Total Jobs</h3>
+        <p class="stat-number">{{ jobs.length }}</p>
+        <small class="toggle-hint">Click to {{ showJobs ? 'hide' : 'show' }} jobs list</small>
+      </div>
+      <div class="stat-card clickable" (click)="toggleApplicants()">
+        <div class="stat-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+        </div>
+        <h3>Applications</h3>
+        <p class="stat-number">{{ applicants.length }}</p>
+        <small class="toggle-hint">Click to {{ showApplicants ? 'hide' : 'show' }} applications list</small>
+      </div>
+    </div>
+
+    <!-- USERS SECTION -->
+    <div class="section" *ngIf="showUsers">
+      <div class="section-header">
+        <h2>Users Management</h2>
+        <span class="badge">{{ filteredUsers.length }} users</span>
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="isLoadingUsers" class="loading-skeleton">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+
+      <!-- Filters and Search -->
+      <div *ngIf="!isLoadingUsers" class="filters-section">
+        <div class="filter-group">
+          <input type="text" placeholder="Search by name or email..." [(ngModel)]="searchUser" class="search-input" />
+        </div>
+        <div class="filter-group">
+          <select [(ngModel)]="roleFilter" class="filter-select">
+            <option value="">All Roles</option>
+            <option value="ADMIN">Admin</option>
+            <option value="COMPANY">Company</option>
+            <option value="USER">User</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Users Grid -->
+      <div *ngIf="!isLoadingUsers && paginatedUsers.length > 0" class="users-list">
+        <div class="user-card" *ngFor="let u of paginatedUsers; trackBy: trackByUserId">
+          <div class="card-header">
+            <div class="user-avatar">{{ u.name?.charAt(0)?.toUpperCase() || 'U' }}</div>
+            <div class="user-basic">
+              <h4>{{ u.name }}</h4>
+              <span class="role-badge" [ngClass]="'role-' + (u.role?.toLowerCase() || 'user')">{{
+                u.role
+                }}</span>
+            </div>
+          </div>
+          <div class="user-info">
+            <p><strong>Email:</strong> {{ u.email }}</p>
+            <p><strong>ID:</strong> {{ u.id }}</p>
+          </div>
+          <!-- <div class="user-actions">
+            <button 
+              class="delete-btn" 
+              (click)="showDeleteConfirmation('user', u.id, u.name)" 
+              title="Delete user"
+              [disabled]="u.role === 'ADMIN'">
+              🗑️ Delete User
+            </button>
+          </div> -->
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!isLoadingUsers && filteredUsers.length === 0" class="empty-state">
+        <div class="empty-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.5">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+        </div>
+        <p>No users found matching your criteria</p>
+      </div>
+
+      <!-- Pagination -->
+      <div *ngIf="!isLoadingUsers && userPageCount > 1" class="pagination">
+        <button [disabled]="pagination.users.page === 1" (click)="pagination.users.page = pagination.users.page - 1"
+          class="pagination-btn">
+          ← Previous
+        </button>
+        <span class="page-info">Page {{ pagination.users.page }} of {{ userPageCount }}</span>
+        <button [disabled]="pagination.users.page === userPageCount"
+          (click)="pagination.users.page = pagination.users.page + 1" class="pagination-btn">
+          Next →
+        </button>
+      </div>
+    </div>
+
+    <!-- COMPANIES SECTION -->
+    <div class="section" *ngIf="showCompanies">
+      <div class="section-header">
+        <h2>Companies Management</h2>
+        <span class="badge">{{ filteredCompanies.length }} companies</span>
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="isLoadingCompanies" class="loading-skeleton">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+
+      <!-- Filters and Search -->
+      <div *ngIf="!isLoadingCompanies" class="filters-section">
+        <div class="filter-group">
+          <input type="text" placeholder="Search by name or location..." [(ngModel)]="searchCompany"
+            class="search-input" />
+        </div>
+        <div class="filter-group">
+          <select [(ngModel)]="companySortBy" class="filter-select">
+            <option value="">Sort By</option>
+            <option value="rating">Rating (High to Low)</option>
+            <option value="size">Size</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Companies Grid -->
+      <div *ngIf="!isLoadingCompanies && paginatedCompanies.length > 0" class="companies-list">
+        <div class="company-card" *ngFor="let c of paginatedCompanies; trackBy: trackByCompanyId">
+          <div class="company-logo">
+            <img [src]="getLogoUrl(c.logo)" [alt]="c.name" class="logo-img" />
+          </div>
+          <div class="company-info">
+            <h4>{{ c.name }}</h4>
+            <div class="company-details">
+              <span><strong>Industry:</strong> {{ c.industry }}</span>
+              <span><strong>Location:</strong> {{ c.location }}</span>
+              <span><strong>Size:</strong> {{ c.size }}</span>
+              <span><strong>Rating:</strong> ⭐ {{ c.rating || 0 }}/5</span>
+              <span><strong>Open Positions:</strong> {{ c.openPositions || 0 }}</span>
+            </div>
+            <p class="description">{{ c.description }}</p>
+            <button class="delete-btn" (click)="showDeleteConfirmation('company', c.id, c.name)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                <line x1="10" y1="11" x2="10" y2="17"></line>
+                <line x1="14" y1="11" x2="14" y2="17"></line>
+              </svg>
+              Delete Company
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!isLoadingCompanies && filteredCompanies.length === 0" class="empty-state">
+        <div class="empty-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.5">
+            <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+            <path d="M9 22v-4h6v4"></path>
+            <path d="M8 6h.01"></path>
+            <path d="M16 6h.01"></path>
+            <path d="M8 10h.01"></path>
+            <path d="M16 10h.01"></path>
+          </svg>
+        </div>
+        <p>No companies found matching your criteria</p>
+      </div>
+
+      <!-- Pagination -->
+      <div *ngIf="!isLoadingCompanies && companyPageCount > 1" class="pagination">
+        <button [disabled]="pagination.companies.page === 1"
+          (click)="pagination.companies.page = pagination.companies.page - 1" class="pagination-btn">
+          ← Previous
+        </button>
+        <span class="page-info">Page {{ pagination.companies.page }} of {{ companyPageCount }}</span>
+        <button [disabled]="pagination.companies.page === companyPageCount"
+          (click)="pagination.companies.page = pagination.companies.page + 1" class="pagination-btn">
+          Next →
+        </button>
+      </div>
+    </div>
+
+    <!-- JOBS SECTION -->
+    <div class="section" *ngIf="showJobs">
+      <div class="section-header">
+        <h2>Jobs Management</h2>
+        <span class="badge">{{ filteredJobs.length }} jobs</span>
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="isLoadingJobs" class="loading-skeleton">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+
+      <!-- Filters and Search -->
+      <div *ngIf="!isLoadingJobs" class="filters-section">
+        <div class="filter-group">
+          <input type="text" placeholder="Search by job title or location..." [(ngModel)]="searchJob"
+            class="search-input" />
+        </div>
+        <div class="filter-group">
+          <select [(ngModel)]="jobTypeFilter" class="filter-select">
+            <option value="">All Job Types</option>
+            <option value="FULL_TIME">Full Time</option>
+            <option value="PART_TIME">Part Time</option>
+            <option value="CONTRACT">Contract</option>
+            <option value="INTERNSHIP">Internship</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Jobs List -->
+      <div *ngIf="!isLoadingJobs && paginatedJobs.length > 0" class="jobs-list">
+        <div class="job-card" *ngFor="let job of paginatedJobs; trackBy: trackByJobId">
+          <div class="job-item-list" style="position: relative;">
+            <!-- Top-right Chevron -->
+            <div class="expand-icon" [class.rotated]="isJobExpanded(job.id)" (click)="toggleJobApplicants(job.id); $event.stopPropagation()" title="Toggle applicants">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </div>
+
+            <div class="job-item-info" (click)="toggleJobApplicants(job.id)" style="cursor: pointer;">
+              <div class="job-item-header">
+                <h4>{{ job.title }}</h4>
+                <span class="job-type-badge"
+                  [ngClass]="'type-' + (job.type?.toLowerCase().replace('_', '-') || 'full-time')">
+                  {{ job.type }}
+                </span>
+              </div>
+              <div class="job-item-details">
+                <span class="job-detail">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="vertical-align: middle; margin-right: 4px;">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                  {{ job.location }}
+                </span>
+                <span class="job-detail"><span style="font-weight:600;">₹</span> {{ job.salary }}</span>
+                <span class="job-detail">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  </svg>
+                  {{ getJobApplicants(job.id).length }} applicants
+                </span>
+              </div>
+            </div>
+            <div class="job-item-actions">
+              <button class="update-btn" (click)="showUpdateJobModal(job); $event.stopPropagation()" title="Update job">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+                Edit
+              </button>
+              <button class="delete-btn" (click)="showDeleteConfirmation('job', job.id, job.title); $event.stopPropagation()" title="Delete job">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  <line x1="10" y1="11" x2="10" y2="17"></line>
+                  <line x1="14" y1="11" x2="14" y2="17"></line>
+                </svg>
+                Delete
+              </button>
+            </div>
+          </div>
+
+          <!-- Job Applicants (Accordion) -->
+          <div class="job-applicants" *ngIf="isJobExpanded(job.id)">
+            <div class="applicants-section">
+              <h5>Applicants for this job:</h5>
+              <div *ngIf="getJobApplicants(job.id).length === 0" class="no-applicants">
+                No applicants yet
+              </div>
+              <div *ngIf="getJobApplicants(job.id).length > 0" class="applicants-mini-list">
+                <div class="applicant-item" *ngFor="let app of getJobApplicants(job.id)">
+                  <div class="applicant-name">{{ app.user?.name }}</div>
+                  <span class="status-badge" [ngClass]="'status-' + (app.status?.toLowerCase() || 'applied')">
+                    {{ app.status }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!isLoadingJobs && filteredJobs.length === 0" class="empty-state">
+        <div class="empty-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.5">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+        </div>
+        <p>No jobs found matching your criteria</p>
+      </div>
+
+      <!-- Pagination -->
+      <div *ngIf="!isLoadingJobs && jobPageCount > 1" class="pagination">
+        <button [disabled]="pagination.jobs.page === 1" (click)="pagination.jobs.page = pagination.jobs.page - 1"
+          class="pagination-btn">
+          ← Previous
+        </button>
+        <span class="page-info">Page {{ pagination.jobs.page }} of {{ jobPageCount }}</span>
+        <button [disabled]="pagination.jobs.page === jobPageCount"
+          (click)="pagination.jobs.page = pagination.jobs.page + 1" class="pagination-btn">
+          Next →
+        </button>
+      </div>
+    </div>
+
+    <!-- APPLICATIONS SECTION -->
+    <div class="section" *ngIf="showApplicants">
+      <div class="section-header">
+        <h2>Applications Management</h2>
+        <span class="badge">{{ filteredApplicants.length }} applications</span>
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="isLoadingApplicants" class="loading-skeleton">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+
+      <!-- Filters and Search -->
+      <div *ngIf="!isLoadingApplicants" class="filters-section">
+        <div class="filter-group">
+          <input type="text" placeholder="Search by applicant name, email, or job..." [(ngModel)]="searchApplicant"
+            class="search-input" />
+        </div>
+        <div class="filter-group">
+          <select [(ngModel)]="applicationStatusFilter" class="filter-select">
+            <option value="">All Statuses</option>
+            <option value="APPLIED">Applied</option>
+            <option value="SELECTED">Selected</option>
+            <option value="REJECTED">Rejected</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Applications Grid -->
+      <div *ngIf="!isLoadingApplicants && paginatedApplicants.length > 0" class="applications-list">
+        <div class="application-card" *ngFor="let app of paginatedApplicants; trackBy: trackByApplicantId">
+          <div class="app-header">
+            <div class="app-applicant">
+              <div class="avatar">{{ app.user?.name?.charAt(0)?.toUpperCase() || 'A' }}</div>
+              <div class="applicant-info">
+                <h4>{{ app.user?.name }}</h4>
+                <p>{{ app.user?.email }}</p>
+              </div>
+            </div>
+            <div class="app-status">
+              <span class="status-badge" [ngClass]="'status-' + (app.status?.toLowerCase() || 'applied')">
+                {{ app.status }}
+              </span>
+            </div>
+          </div>
+
+          <div class="app-content">
+            <div class="app-job">
+              <strong>Job:</strong> {{ app.job?.title }} @ {{ app.job?.companyName }}
+            </div>
+            <div class="app-details">
+              <span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                {{ app.job?.location }}
+              </span>
+              <span><span style="font-weight:600;">₹</span> {{ app.job?.salary }}</span>
+
+            </div>
+          </div>
+
+          <div class="app-actions">
+            <!-- Status Dropdown -->
+            <!-- <select 
+              [value]="app.status" 
+              (change)="onStatusChange($event, app.id)"
+              class="status-select">
+              <option value="">{{ app.status || 'Change Status' }}</option>
+              <option value="APPLIED">APPLIED</option>
+              <option value="SELECTED">SELECTED</option>
+              <option value="REJECTED">REJECTED</option>
+            </select> -->
+
+            <!-- Resume Download -->
+            <a *ngIf="app.resumePath" [href]="'http://localhost:8080' + app.resumePath" target="_blank"
+              class="resume-link" title="Download resume">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px;">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+              Resume
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!isLoadingApplicants && filteredApplicants.length === 0" class="empty-state">
+        <div class="empty-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.5">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+        </div>
+        <p>No applications found matching your criteria</p>
+      </div>
+
+      <!-- Pagination -->
+      <div *ngIf="!isLoadingApplicants && applicantPageCount > 1" class="pagination">
+        <button [disabled]="pagination.applicants.page === 1"
+          (click)="pagination.applicants.page = pagination.applicants.page - 1" class="pagination-btn">
+          ← Previous
+        </button>
+        <span class="page-info">Page {{ pagination.applicants.page }} of {{ applicantPageCount }}</span>
+        <button [disabled]="pagination.applicants.page === applicantPageCount"
+          (click)="pagination.applicants.page = pagination.applicants.page + 1" class="pagination-btn">
+          Next →
+        </button>
+      </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div *ngIf="deleteModal.show" class="modal-overlay" (click)="closeDeleteConfirmation()">
+      <div class="modal-dialog" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Confirm Delete</h3>
+          <button class="modal-close" (click)="closeDeleteConfirmation()">×</button>
+        </div>
+        <div class="modal-body">
+          <p>
+            Are you sure you want to delete <strong>{{ deleteModal.name }}</strong>?
+          </p>
+          <p style="color: #dc3545; font-size: 0.9rem">This action cannot be undone.</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" (click)="closeDeleteConfirmation()">Cancel</button>
+          <button class="btn btn-danger" (click)="confirmDelete()">Delete</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Update Job Modal -->
+    <div *ngIf="updateJobModal.show" class="modal-overlay" (click)="closeUpdateJobModal()">
+      <div class="modal-dialog" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Update Job</h3>
+          <button class="modal-close" (click)="closeUpdateJobModal()">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="jobTitle">Job Title</label>
+            <input type="text" id="jobTitle" [(ngModel)]="updateJobModal.job.title" class="form-control" required />
+          </div>
+          <div class="form-group">
+            <label for="jobType">Job Type</label>
+            <select id="jobType" [(ngModel)]="updateJobModal.job.type" class="form-control" required>
+              <option value="">Select Type</option>
+              <option value="FULL_TIME">Full Time</option>
+              <option value="PART_TIME">Part Time</option>
+              <option value="CONTRACT">Contract</option>
+              <option value="INTERNSHIP">Internship</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="jobLocation">Location</label>
+            <input type="text" id="jobLocation" [(ngModel)]="updateJobModal.job.location" class="form-control"
+              required />
+          </div>
+          <div class="form-group">
+            <label for="jobSalary">Salary</label>
+            <input type="text" id="jobSalary" [(ngModel)]="updateJobModal.job.salary" class="form-control" required />
+          </div>
+          <div class="form-group">
+            <label for="jobDescription">Description</label>
+            <textarea id="jobDescription" [(ngModel)]="updateJobModal.job.description" class="form-control" rows="4"
+              required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" (click)="closeUpdateJobModal()">Cancel</button>
+          <button class="btn btn-primary" (click)="updateJob()">Update Job</button>
+        </div>
+      </div>
+    </div>
+
+    <router-outlet></router-outlet>
+  </main>
+</div>
