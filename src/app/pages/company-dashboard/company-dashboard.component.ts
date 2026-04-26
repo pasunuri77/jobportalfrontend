@@ -8,6 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { JobPostingComponent } from '../../components/job-posting/job-posting.component';
 import { HeaderComponent } from '../../layout/header/header.component';
 import { Viewallapplications } from '../viewallapplications/viewallapplications';
+import { environment } from '../../../environment/environment';
 
 @Component({
   selector: 'app-company-dashboard',
@@ -46,11 +47,11 @@ export class CompanyDashboardComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private toastr: ToastrService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const email = this.authService.getUserEmail();
-    
+
     // Extract user data from token
     this.userData = this.authService.getUserData();
 
@@ -119,7 +120,7 @@ export class CompanyDashboardComponent implements OnInit {
     this.authService.getAllJobs().subscribe({
       next: (jobs: any) => {
         const allJobs = Array.isArray(jobs) ? jobs : [];
-        
+
         // Filter jobs by company ID using if condition
         if (this.company && this.company.id) {
           this.postedJobs = allJobs.filter(job => {
@@ -136,7 +137,7 @@ export class CompanyDashboardComponent implements OnInit {
         } else {
           this.postedJobs = [];
         }
-        
+
         console.log(`Filtered ${this.postedJobs.length} jobs for company ${this.company?.name || 'Unknown'} (ID: ${this.company?.id})`);
         this.cdr.detectChanges();
       },
@@ -156,13 +157,30 @@ export class CompanyDashboardComponent implements OnInit {
     if (!confirm('Delete this job?')) return;
 
     this.authService.deleteJob(String(jobId)).subscribe({
-      next: () => {
+      next: (response) => {
         this.postedJobs = this.postedJobs.filter(j => j.id !== jobId);
-        this.toastr.success('Job deleted', 'Success');
+        this.toastr.success('Delete successfully', 'Success');
         this.cdr.detectChanges();
       },
-      error: () => {
-        this.toastr.error('Delete failed', 'Error');
+      error: (error) => {
+        // Check if it's actually a success (some backends return 200 but Angular treats it as error)
+        if (error.status === 200 || error.status === 204) {
+          this.postedJobs = this.postedJobs.filter(j => j.id !== jobId);
+          this.toastr.success('Delete successfully', 'Success');
+          this.cdr.detectChanges();
+          return;
+        }
+
+        // Show more specific error message based on status
+        if (error.status === 401) {
+          this.toastr.error('Authentication failed. Please login again.', 'Error');
+        } else if (error.status === 403) {
+          this.toastr.error('You do not have permission to delete this job.', 'Error');
+        } else if (error.status === 404) {
+          this.toastr.error('Job not found.', 'Error');
+        } else {
+          this.toastr.error('Delete failed. Please try again.', 'Error');
+        }
       }
     });
   }
@@ -198,10 +216,10 @@ export class CompanyDashboardComponent implements OnInit {
     // Close the form
     this.showJobForm = false;
     this.selectedJobForUpdate = null;
-    
+
     // Show success message
     this.toastr.success('Job updated successfully!', 'Success');
-    
+
     // Refresh the jobs list
     this.loadCompanyJobs();
   }
@@ -213,7 +231,7 @@ export class CompanyDashboardComponent implements OnInit {
   getLogoUrl(path: string): string {
     if (!path) return '';
 
-    const base = 'http://localhost:8080';
+    const base = environment.apiUrl;
 
     return path.startsWith('http')
       ? path

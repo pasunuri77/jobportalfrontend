@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApplicationService } from '../../service/application.service';
 import { JobService } from '../../service/job.service';
+import { environment } from '../../../environment/environment';
 @Component({
   selector: 'app-viewallapplications',
   standalone: true,
@@ -142,5 +143,10 @@ export class Viewallapplications implements OnInit {
 
   openEmailForm(application: any): void {
     // Handle email form opening if needed
+  }
+
+  getResumeUrl(resumePath: string): string {
+    if (!resumePath) return '';
+    return `${environment.apiUrl}${resumePath.startsWith('/') ? '' : '/'}${resumePath}`;
   }
 }

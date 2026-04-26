@@ -6,12 +6,7 @@
 
   <div class="jobs-filters">
     <div class="search-box">
-      <input 
-        type="text" 
-        placeholder="Search jobs or companies..." 
-        [(ngModel)]="searchTerm"
-        class="search-input"
-      />
+      <input type="text" placeholder="Search jobs or companies..." [(ngModel)]="searchTerm" class="search-input" />
     </div>
     <select class="filter-select" [(ngModel)]="selectedType">
       <option value="">All Types</option>
@@ -25,10 +20,8 @@
 
   <div class="jobs-content">
     <div class="jobs-list">
-      <div class="job-card" 
-           *ngFor="let job of filteredJobs" 
-           [class.active]="selectedJob.id === job.id"
-           (click)="selectJob(job)">
+      <div class="job-card" *ngFor="let job of filteredJobs" [class.active]="selectedJob.id === job.id"
+        (click)="selectJob(job)">
         <div class="job-header">
           <div class="company-logo">
             <img [src]="getLogoUrl(job.logo)" [alt]="job.company" (error)="onImageError($event)" />
@@ -37,12 +30,12 @@
             <h3>{{ job.title }}</h3>
             <p class="company">{{ job.companyName }}</p>
             <p class="location">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                    <circle cx="12" cy="10" r="3"></circle>
-                  </svg>
-                  {{ job.location }}
-                </p>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              {{ job.location }}
+            </p>
           </div>
           <div class="job-meta">
             <span class="type" [ngClass]="job.type?.toLowerCase()">{{ job.type }}</span>
@@ -53,20 +46,15 @@
           <p>{{ job.description }}</p>
         </div> -->
         <div class="job-footer">
-          <span class="salary">{{ job.salary }} PA</span>
-          <button 
-  *ngIf="!hasAlreadyApplied(job.id)" 
-  class="apply-btn" 
-  (click)="applyForJob(job); $event.stopPropagation()">
-  Apply
-</button>
-<button 
-  *ngIf="hasAlreadyApplied(job.id)" 
-  class="applied-btn" 
-  (click)="applyForJob(job); $event.stopPropagation()"
-  disabled>
-  Already Applied
-</button>
+          <span class="salary">₹{{ job.salary }} PA</span>
+          <button *ngIf="!hasAlreadyApplied(job.id)" class="apply-btn"
+            (click)="applyForJob(job); $event.stopPropagation()">
+            Apply
+          </button>
+          <button *ngIf="hasAlreadyApplied(job.id)" class="applied-btn"
+            (click)="applyForJob(job); $event.stopPropagation()" disabled>
+            Already Applied
+          </button>
         </div>
       </div>
     </div>
@@ -82,12 +70,12 @@
             <p class="company">{{ selectedJob.companyName }}</p>
             <div class="detail-meta">
               <span class="location">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                    <circle cx="12" cy="10" r="3"></circle>
-                  </svg>
-                  {{ selectedJob.location }}
-                </span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                {{ selectedJob.location }}
+              </span>
               <span class="type" [ngClass]="selectedJob.type?.toLowerCase()">{{ selectedJob.type }}</span>
               <span class="posted">{{ selectedJob.posted | date:'dd-MM-yyyy' }}</span>
             </div>
@@ -110,25 +98,19 @@
           <div class="detail-section">
             <h3>Compensation</h3>
             <div class="salary-info">
-              <span class="salary-amount">{{ selectedJob.salary }}</span>
+              <span class="salary-amount">₹ {{ selectedJob.salary }}</span>
               <span class="salary-note">Competitive salary based on experience</span>
             </div>
           </div>
 
           <div class="detail-section">
-            <button 
-  *ngIf="!hasAlreadyApplied(selectedJob.id)" 
-  class="apply-btn-large" 
-  (click)="applyForJob()">
-  Apply for this Position
-</button>
-<button 
-  *ngIf="hasAlreadyApplied(selectedJob.id)" 
-  class="applied-btn-large" 
-  (click)="applyForJob()"
-  disabled>
-  Already Applied
-</button>
+            <button *ngIf="!hasAlreadyApplied(selectedJob.id)" class="apply-btn-large" (click)="applyForJob()">
+              Apply for this Position
+            </button>
+            <button *ngIf="hasAlreadyApplied(selectedJob.id)" class="applied-btn-large" (click)="applyForJob()"
+              disabled>
+              Already Applied
+            </button>
           </div>
         </div>
       </div>
@@ -137,8 +119,6 @@
 </div>
 
 <!-- Job Application Modal -->
-<app-job-application-modal 
-  [show]="showApplicationModal" 
-  [job]="selectedJobForApplication"
+<app-job-application-modal [show]="showApplicationModal" [job]="selectedJobForApplication"
   (close)="closeApplicationModal()">
 </app-job-application-modal>

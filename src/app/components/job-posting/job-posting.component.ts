@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { JobService } from '../../service/job.service';
 import { AuthService } from '../../service/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from '../../../environment/environment';
 
 @Component({
   selector: 'app-job-posting',
@@ -76,7 +77,7 @@ export class JobPostingComponent implements OnInit {
       if (this.jobData.logo) {
         this.logoPreview = this.jobData.logo.startsWith('http') ? 
           this.jobData.logo : 
-          `http://localhost:8080${this.jobData.logo}`;
+          `${environment.apiUrl}${this.jobData.logo}`;
       }
     }
   }
@@ -130,7 +131,6 @@ export class JobPostingComponent implements OnInit {
       this.jobService.updateJob(this.jobData.id, formData).subscribe({
         next: () => {
           this.toastr.success('Job updated successfully!', 'Success');
-          this.showMessage('Job updated successfully!', 'success');
           this.resetForm();
           this.isSubmitting = false;
           this.isEditMode = false;
@@ -142,7 +142,6 @@ export class JobPostingComponent implements OnInit {
         error: (error) => {
           console.error('Error updating job:', error);
           this.toastr.error('Failed to update job. Please try again.', 'Error');
-          this.showMessage('Failed to update job. Please try again.', 'error');
           this.isSubmitting = false;
         },
       });
@@ -153,7 +152,6 @@ export class JobPostingComponent implements OnInit {
         next: (response) => {
           console.log('Job creation response:', response);
           this.toastr.success('Job posted successfully!', 'Success');
-          this.showMessage('Job posted successfully!', 'success');
           this.resetForm();
           this.isSubmitting = false;
           
@@ -163,8 +161,7 @@ export class JobPostingComponent implements OnInit {
         error: (error) => {
           console.error('Error posting job:', error);
           this.toastr.error('Failed to post job. Please try again.', 'Error');
-          this.showMessage('Failed to post job. Please try again.', 'error');
-          this.isSubmitting = false;
+            this.isSubmitting = false;
         },
         complete: () => {
           console.log('Job creation observable completed');

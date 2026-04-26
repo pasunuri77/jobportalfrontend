@@ -5,6 +5,7 @@ import { AuthService } from '../../service/auth.service';
 import { JobApplicationModalComponent } from '../../components/job-application-modal/job-application-modal.component';
 import se from '@angular/common/locales/se';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from '../../../environment/environment';
 
 @Component({
   selector: 'app-jobs',
@@ -109,9 +110,9 @@ export class JobsComponent {
       return logoPath.url;
     }
     
-    // If it's a string path, prepend backend URL
+    // If it's a string path, prepend backend URL from environment
     if (typeof logoPath === 'string') {
-      const backendUrl = 'http://localhost:8080';
+      const backendUrl = environment.apiUrl;
       return logoPath.startsWith('/') ? `${backendUrl}${logoPath}` : `${backendUrl}/${logoPath}`;
     }
     

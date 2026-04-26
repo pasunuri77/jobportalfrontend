@@ -7,6 +7,7 @@ import { AuthService } from '../../service/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, interval, takeUntil } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { environment } from '../../../environment/environment';
 
 interface DashboardStats {
   totalUsers: number;
@@ -470,6 +471,15 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
         console.error('Error status:', error.status);
         console.error('Error message:', error.message);
         console.error('Error details:', error.error);
+        
+        // Check if it's actually a success (some backends return 200 but Angular treats it as error)
+        if (error.status === 200 || error.status === 204) {
+          this.user = this.user.filter((u) => u.id !== userId);
+          this.cdr.detectChanges();
+          this.toastr.success('User deleted successfully!', 'Success');
+          return;
+        }
+        
         this.toastr.error(`Failed to delete user: ${error.status} ${error.statusText || ''}`, 'Error');
       },
     });
@@ -567,8 +577,17 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     if (!logoPath)
       return 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23ddd%22 width=%22100%22 height=%22100%22/%3E%3C/svg%3E';
     if (logoPath.startsWith('http')) return logoPath;
-    const backendUrl = 'http://localhost:8080';
+    const backendUrl = environment.apiUrl;
     return logoPath.startsWith('/') ? `${backendUrl}${logoPath}` : `${backendUrl}/${logoPath}`;
+  }
+
+  /**
+   * Get resume download URL
+   */
+  getResumeUrl(resumePath: string): string {
+    if (!resumePath) return '';
+    // Don't prepend API URL for resume downloads - use the path as is
+    return resumePath.startsWith('http') ? resumePath : resumePath;
   }
 
   /**
