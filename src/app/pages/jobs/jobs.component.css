@@ -534,5 +534,8 @@
   .job-item-list{
     display: block;
   }
+  .type{
+    height: fit-content;
+  }
 
 }

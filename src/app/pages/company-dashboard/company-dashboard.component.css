@@ -1762,6 +1762,11 @@ select.form-control {
     width: 95%;
     margin: 10px;
   }
+  .dashboard-header {
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+  }
 
   .application-header {
     flex-direction: column;

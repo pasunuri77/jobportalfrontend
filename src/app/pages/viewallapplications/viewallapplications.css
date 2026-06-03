@@ -1613,6 +1613,7 @@ textarea.form-control {
     flex-direction: column;
     gap: 16px;
     text-align: center;
+    margin-top: 20px;
   }
 
   .header-stats {
@@ -1653,6 +1654,7 @@ textarea.form-control {
   .applicant-actions {
     justify-content: center;
   }
+
   .applications-content {
     padding: 0px;
   }

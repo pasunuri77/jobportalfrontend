@@ -346,6 +346,9 @@
   .info-grid {
     grid-template-columns: 1fr;
   }
+  .size{
+    height: fit-content;
+  }
 }
 
 /* Inline Loading State (same as Jobs) */
