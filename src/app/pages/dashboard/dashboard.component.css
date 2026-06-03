@@ -19,8 +19,8 @@
   width: auto;
   background: #f8fafc;
   /* main content should scroll within the available viewport area */
-  max-height: calc(100vh - 60px);
   overflow-y: auto;
+  height: 100%;
   transition: padding 0.2s ease, width 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   padding: 1.5rem 2rem;

@@ -94,7 +94,7 @@ export class ProfileComponent implements OnInit {
       }
     ],
     stats: {
-      applicationsSubmitted: 28,
+      applicationsSubmitted: 12,
       interviewsCount: 8,
       offersCount: 3,
       rejected: 2

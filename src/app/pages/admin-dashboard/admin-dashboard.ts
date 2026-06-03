@@ -62,9 +62,10 @@ export class AdminDashboardComponent implements OnInit, OnDestroy, AfterViewInit
       { key: 'id', label: 'ID', sortable: true, width: '70px', type: 'number' },
       { key: 'name', label: 'Name', sortable: true },
       { key: 'email', label: 'Email', sortable: true },
-      { key: 'role', label: 'Role', type: 'badge', sortable: true,
+      {
+        key: 'role', label: 'Role', type: 'badge', sortable: true,
         badgeClass: (value) => {
-          switch(value?.toLowerCase()) {
+          switch (value?.toLowerCase()) {
             case 'admin':
               return 'status-active';
             case 'company':
@@ -91,7 +92,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy, AfterViewInit
   getCompaniesTableConfig(logoCol: any, ratingCol: any, actionsCol: any): TableConfig {
     if (this.cachedCompaniesConfig) return this.cachedCompaniesConfig;
     if (!logoCol) return { columns: [] };
-    
+
     this.cachedCompaniesConfig = {
       columns: [
         { key: 'logo', label: 'Logo', type: 'custom', customTemplate: logoCol, width: '90px' },
@@ -115,15 +116,17 @@ export class AdminDashboardComponent implements OnInit, OnDestroy, AfterViewInit
   getJobsTableConfig(applicantsCol: any, actionsCol: any): TableConfig {
     if (this.cachedJobsConfig) return this.cachedJobsConfig;
     if (!applicantsCol) return { columns: [] };
-    
+
     this.cachedJobsConfig = {
       columns: [
         { key: 'title', label: 'Job Title', sortable: true },
-        { key: 'type', label: 'Type', type: 'badge', sortable: true,
+        {
+          key: 'type', label: 'Type', type: 'badge', sortable: true,
           badgeClass: (value) => {
             return 'type-' + (value?.toLowerCase().replace('_', '-') || 'full-time');
           }
         },
+        { key: 'name', label: 'Company Name', sortable: true },
         { key: 'location', label: 'Location', sortable: true },
         { key: 'salary', label: 'Salary', sortable: true },
         { key: 'applicants', label: 'Applicants', type: 'custom', customTemplate: applicantsCol },
@@ -141,12 +144,13 @@ export class AdminDashboardComponent implements OnInit, OnDestroy, AfterViewInit
   getApplicantsTableConfig(userCol: any, jobCol: any, resumeCol: any, actionsCol: any): TableConfig {
     if (this.cachedApplicantsConfig) return this.cachedApplicantsConfig;
     if (!userCol) return { columns: [] };
-    
+
     this.cachedApplicantsConfig = {
       columns: [
         { key: 'user', label: 'Applicant', type: 'custom', customTemplate: userCol },
         { key: 'job', label: 'Job Details', type: 'custom', customTemplate: jobCol },
-        { key: 'status', label: 'Status', type: 'badge', sortable: true,
+        {
+          key: 'status', label: 'Status', type: 'badge', sortable: true,
           badgeClass: (value) => {
             return 'status-' + (value?.toLowerCase() || 'applied');
           }
@@ -215,7 +219,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy, AfterViewInit
     private authService: AuthService,
     private cdr: ChangeDetectorRef,
     private toastr: ToastrService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadAllData();
@@ -616,10 +620,10 @@ export class AdminDashboardComponent implements OnInit, OnDestroy, AfterViewInit
       this.toastr.error('Invalid user ID', 'Error');
       return;
     }
-    
+
     console.log('Attempting to delete user with ID:', numericId);
     console.log('Token available:', !!localStorage.getItem('token'));
-    
+
     this.authService.deleteUser(numericId.toString()).subscribe({
       next: () => {
         this.user = this.user.filter((u) => u.id !== userId);

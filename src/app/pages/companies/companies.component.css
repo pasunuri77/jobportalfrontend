@@ -3,6 +3,7 @@
   margin: 0 auto;
   background: #f8fafc;
   min-height: 100vh;
+  position: relative;
 }
 
 .companies-header {
@@ -345,4 +346,43 @@
   .info-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* Loading overlay */
+.loading-overlay {
+  position: absolute;
+  inset: 0 0 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 80;
+}
+
+.loading-overlay .overlay-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(2px);
+}
+
+.loading-overlay .overlay-inner {
+  position: relative;
+  z-index: 81;
+  text-align: center;
+}
+
+.loading-overlay .spinner {
+  width: 56px;
+  height: 56px;
+  border: 6px solid #f0f0f0;
+  border-top: 6px solid #5c6ac4;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 8px auto;
+}
+
+.loading-overlay p {
+  margin: 0;
+  color: #6b7280;
+  font-weight: 600;
 }

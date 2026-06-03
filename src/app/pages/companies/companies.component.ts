@@ -83,10 +83,12 @@ export class CompaniesComponent  {
   company: any[] = []
   
   selectedCompany: any; // Declare without initialization
+  isLoading: boolean = false;
 
   constructor(private authService: AuthService,private cdr: ChangeDetectorRef,private toastr: ToastrService) { }
 
   ngOnInit(): void {
+    this.isLoading = true;
     this.authService.getAllCompanies().subscribe({
       next: (Company: any) => {
         this.company = Company;
@@ -95,10 +97,12 @@ export class CompaniesComponent  {
           this.selectedCompany = this.company[0];
           this.toastr.success('Companies loaded successfully', 'Success');
         }
+        this.isLoading = false;
         this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error loading companies:', error);
+        this.isLoading = false;
         this.toastr.error('Failed to load companies', 'Error');
       }
     });

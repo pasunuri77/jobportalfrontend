@@ -99,6 +99,15 @@
             <span class="badge">{{ filteredCompanies.length }} companies</span>
           </div>
 
+            <!-- Section-level loading overlay -->
+            <div *ngIf="isLoadingCompanies" class="section-loading-overlay">
+              <div class="overlay-backdrop"></div>
+              <div class="overlay-spinner">
+                <div class="spinner large"></div>
+                <p>Loading companies...</p>
+              </div>
+            </div>
+
           <!-- Filters and Search -->
           <div *ngIf="!isLoadingCompanies" class="filters-section">
             <div class="filter-group">
@@ -129,6 +138,15 @@
             <h2>Jobs Management</h2>
             <span class="badge">{{ filteredJobs.length }} jobs</span>
           </div>
+
+            <!-- Section-level loading overlay -->
+            <div *ngIf="isLoadingJobs" class="section-loading-overlay">
+              <div class="overlay-backdrop"></div>
+              <div class="overlay-spinner">
+                <div class="spinner large"></div>
+                <p>Loading jobs...</p>
+              </div>
+            </div>
 
           <!-- Filters and Search -->
           <div *ngIf="!isLoadingJobs" class="filters-section">
