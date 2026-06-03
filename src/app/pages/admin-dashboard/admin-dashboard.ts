@@ -593,7 +593,15 @@ export class AdminDashboardComponent implements OnInit, OnDestroy, AfterViewInit
       },
       error: (error: any) => {
         console.error('Error deleting company:', error);
-        this.toastr.error('Failed to delete company. Please try again.', 'Error');
+        // Treat 200/204 returned inside error as success (some backends return success but response parsing triggers error)
+        if (error && (error.status === 200 || error.status === 204)) {
+          this.company = this.company.filter((c) => c.id !== companyId);
+          this.cdr.detectChanges();
+          this.toastr.success('Company deleted successfully!', 'Success');
+          return;
+        }
+        const serverMessage = error?.error?.message || error?.message || 'Failed to delete company. Please try again.';
+        this.toastr.error(serverMessage, 'Error');
       },
     });
   }
@@ -620,19 +628,15 @@ export class AdminDashboardComponent implements OnInit, OnDestroy, AfterViewInit
       },
       error: (error: any) => {
         console.error('Error deleting user:', error);
-        console.error('Error status:', error.status);
-        console.error('Error message:', error.message);
-        console.error('Error details:', error.error);
-        
-        // Check if it's actually a success (some backends return 200 but Angular treats it as error)
-        if (error.status === 200 || error.status === 204) {
+        // Some backends return 200/204 but Angular reports an error; treat those as success.
+        if (error && (error.status === 200 || error.status === 204)) {
           this.user = this.user.filter((u) => u.id !== userId);
           this.cdr.detectChanges();
           this.toastr.success('User deleted successfully!', 'Success');
           return;
         }
-        
-        this.toastr.error(`Failed to delete user: ${error.status} ${error.statusText || ''}`, 'Error');
+        const serverMessage = error?.error?.message || error?.message || `Failed to delete user: ${error.status || ''}`;
+        this.toastr.error(serverMessage, 'Error');
       },
     });
   }
@@ -649,7 +653,14 @@ export class AdminDashboardComponent implements OnInit, OnDestroy, AfterViewInit
       },
       error: (error: any) => {
         console.error('Error deleting job:', error);
-        this.toastr.error('Failed to delete job. Please try again.', 'Error');
+        if (error && (error.status === 200 || error.status === 204)) {
+          this.jobs = this.jobs.filter((j) => j.id !== jobId);
+          this.cdr.detectChanges();
+          this.toastr.success('Job deleted successfully!', 'Success');
+          return;
+        }
+        const serverMessage = error?.error?.message || error?.message || 'Failed to delete job. Please try again.';
+        this.toastr.error(serverMessage, 'Error');
       },
     });
   }
