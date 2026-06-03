@@ -22,6 +22,7 @@ export class JobsComponent {
   searchTerm = '';
   selectedType = '';
   userApplications: any[] = [];
+  isLoading: boolean = false;
 
   // Modal properties
   showApplicationModal: boolean = false;
@@ -35,12 +36,22 @@ export class JobsComponent {
 
   ngOnInit(): void {
     this.loadUserApplications();
-    this.authService.getAllJobs().subscribe((data: any) => {
-      this.jobs = data;
-      if (this.jobs.length > 0) {
-        this.selectedJob = this.jobs[0];
+    this.isLoading = true;
+    this.authService.getAllJobs().subscribe({
+      next: (data: any) => {
+        this.jobs = data;
+        if (this.jobs.length > 0) {
+          this.selectedJob = this.jobs[0];
+        }
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: (error: any) => {
+        console.error('Error loading jobs:', error);
+        this.toastr.error('Failed to load jobs', 'Error');
+        this.isLoading = false;
+        this.cdr.detectChanges();
       }
-      this.cdr.detectChanges();
     });
   }
 

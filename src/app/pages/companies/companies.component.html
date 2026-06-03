@@ -4,14 +4,13 @@
     <p class="companies-subtitle">Explore top companies and job opportunities</p>
   </div>
 
-
-  <!-- Loading State -->
-  <!-- <div class="loading-state" *ngIf="isLoading">
+  <!-- Loading State (inline, like Jobs) -->
+  <div class="loading-state" *ngIf="isLoading">
     <div class="spinner"></div>
-    <p>Loading jobs...</p>
-  </div> -->
+    <p>Loading companies...</p>
+  </div>
 
-  <div class="companies-content">
+  <div class="companies-content" *ngIf="!isLoading">
     <div class="companies-list">
       <div class="company-card" *ngFor="let company of company" [class.active]="selectedCompany.id === company.id"
         (click)="selectCompany(company)">
@@ -25,21 +24,11 @@
           <div class="company-meta">
             <span class="size">{{ company.size }}</span>
             <span class="positions">{{ company.openPositions }} positions</span>
-  
-          <!-- Loading Overlay -->
-          <div *ngIf="isLoading" class="loading-overlay" aria-busy="true" aria-live="polite">
-            <div class="overlay-backdrop"></div>
-            <div class="overlay-inner">
-              <div class="spinner"></div>
-              <p>Loading companies...</p>
-            </div>
-          </div>
           </div>
         </div>
         <div class="company-rating">
           <span class="rating-stars">
-            <span class="star" *ngFor="let star of [1,2,3,4,5]"
-              [class.filled]="star <= getRatingFloor(company.rating)">★</span>
+            <span class="star" *ngFor="let star of [1,2,3,4,5]" [class.filled]="star <= getRatingFloor(company.rating)">★</span>
           </span>
           <span class="rating-value">{{ company.rating }}</span>
         </div>

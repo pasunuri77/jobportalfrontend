@@ -4,6 +4,12 @@
     <p class="jobs-subtitle">Find your dream job from top companies</p>
   </div>
 
+  <!-- Loading State -->
+  <div class="loading-state" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Loading jobs...</p>
+  </div>
+
   <!-- <div class="jobs-filters">
     <div class="search-box">
       <input type="text" placeholder="Search jobs or companies..." [(ngModel)]="searchTerm" class="search-input" />
@@ -18,7 +24,7 @@
     </select>
   </div> -->
 
-  <div class="jobs-content">
+  <div class="jobs-content" *ngIf="!isLoading">
     <div class="jobs-list">
       <div class="job-card" *ngFor="let job of filteredJobs" [class.active]="selectedJob.id === job.id"
         (click)="selectJob(job)">
