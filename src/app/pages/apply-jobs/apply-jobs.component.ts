@@ -22,8 +22,8 @@ export class ApplyJobsComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private toastr: ToastrService,
-    private cdr:ChangeDetectorRef
-  ) {}
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     this.loadAppliedJobs();
@@ -52,13 +52,13 @@ export class ApplyJobsComponent implements OnInit {
   filterJobs(): void {
     this.filteredJobs = this.appliedJobs.filter(application => {
       const job = application.job || application; // Handle both nested and flat structures
-      const matchesSearch = !this.searchTerm || 
+      const matchesSearch = !this.searchTerm ||
         job.title?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         job.companyName?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         job.location?.toLowerCase().includes(this.searchTerm.toLowerCase());
-      
+
       const matchesType = !this.selectedJobType || job.type === this.selectedJobType;
-      
+
       return matchesSearch && matchesType;
     });
     this.cdr.detectChanges();
@@ -88,20 +88,20 @@ export class ApplyJobsComponent implements OnInit {
 
   getLogoUrl(logoPath: any): string {
     if (!logoPath) return '';
-    
+
     if (typeof logoPath === 'string' && logoPath.startsWith('http')) {
       return logoPath;
     }
-    
+
     if (typeof logoPath === 'object' && logoPath.url) {
       return logoPath.url;
     }
-    
+
     if (typeof logoPath === 'string') {
       const backendUrl = environment.apiUrl;
       return logoPath.startsWith('/') ? `${backendUrl}${logoPath}` : `${backendUrl}/${logoPath}`;
     }
-    
+
     return '';
   }
 
@@ -117,10 +117,10 @@ export class ApplyJobsComponent implements OnInit {
   formatDate(dateString: string): string {
     if (!dateString) return '';
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric' 
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
     });
   }
 

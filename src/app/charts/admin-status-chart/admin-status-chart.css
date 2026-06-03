@@ -1,0 +1,344 @@
+/* ===== ADMIN CHART CARD ===== */
+.admin-chart-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 10px 30px rgba(79, 70, 229, 0.04);
+  animation: fadeIn 0.8s ease-in-out both;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  overflow: hidden;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== CARD HEADER ===== */
+.chart-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(79, 70, 229, 0.06);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* icon box uses primary color below */
+
+.chart-icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+}
+
+.chart-icon-box span {
+  font-size: 24px;
+  color: var(--primary);
+}
+
+
+/* ===== TABS ===== */
+.chart-tabs {
+  display: flex;
+  background: #f1f5f9;
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid rgba(79, 70, 229, 0.04);
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.25s ease;
+  font-family: inherit;
+}
+
+.tab-btn span {
+  font-size: 16px;
+  transition: color 0.25s ease;
+}
+
+.tab-btn:hover {
+  color: #1e293b;
+}
+
+.tab-btn.active {
+  background: white;
+  color: var(--primary);
+  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.12);
+}
+
+.tab-btn.active span {
+  color: var(--primary);
+}
+
+/* ===== CHART BODY ===== */
+.chart-body {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 2rem;
+  align-items: center;
+  min-height: 320px;
+}
+
+@media (max-width: 991px) {
+  .chart-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chart-canvas-container {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== SIDEBAR HIGHLIGHTS ===== */
+.stats-summary-sidebar {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.02) 0%, rgba(139, 92, 246, 0.02) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.06);
+  border-radius: 14px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+  min-height: 250px;
+}
+
+.summary-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #334155;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px dashed rgba(99, 102, 241, 0.06);
+}
+
+.summary-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex: 1;
+}
+
+.summary-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.summary-item:hover {
+  background-color: rgba(99, 102, 241, 0.03);
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.label {
+  font-size: 0.88rem;
+  color: #64748b;
+  font-weight: 500;
+  flex: 1;
+}
+
+.value {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* ===== DYNAMIC COLORS FOR SIDEBAR DOTS ===== */
+/* Overview Dots (use indigo palette shades) */
+users-dot {
+  background-color: #6366f1;
+}
+
+companies-dot {
+  background-color: #818cf8;
+}
+
+jobs-dot {
+  background-color: #a5b4fc;
+}
+
+applicants-dot {
+  background-color: #c4b5fd;
+}
+
+/* Role Dots */
+admin-dot {
+  background-color: #6366f1;
+}
+
+company-role-dot {
+  background-color: #818cf8;
+}
+
+seeker-dot {
+  background-color: #a5b4fc;
+}
+
+/* Job Type Dots */
+fulltime-dot {
+  background-color: #6366f1;
+}
+
+parttime-dot {
+  background-color: #818cf8;
+}
+
+contract-dot {
+  background-color: #a5b4fc;
+}
+
+internship-dot {
+  background-color: #c4b5fd;
+}
+
+/* Application Status Dots */
+applied-dot {
+  background-color: #6366f1;
+}
+
+selected-dot {
+  background-color: #818cf8;
+}
+
+rejected-dot {
+  background-color: #ef4444;
+}
+
+/* ===== FOOTER ===== */
+.sidebar-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #94a3b8;
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-top: 1.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(79, 70, 229, 0.06);
+}
+
+.auto-renew-icon {
+  font-size: 14px;
+  animation: slow-spin 4s linear infinite;
+}
+
+@keyframes slow-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===== COMPACT MODE STYLING ===== */
+.admin-chart-card.compact {
+  padding: 1.25rem;
+  gap: 1rem;
+  margin-bottom: 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+}
+
+.admin-chart-card.compact .chart-card-header {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.admin-chart-card.compact .chart-tabs {
+  width: 100%;
+  justify-content: space-between;
+  display: flex;
+
+}
+
+.admin-chart-card.compact .tab-btn {
+  padding: 0.5rem 0.6rem;
+  flex: 1;
+  justify-content: center;
+  gap: 0;
+}
+
+.admin-chart-card.compact .tab-text {
+  display: none;
+}
+
+.chart-body.compact {
+  grid-template-columns: 1fr;
+  min-height: 260px;
+}
+
+.chart-body.compact .chart-canvas-container {
+  height: 260px;
+}
+
+@media (max-width: 480px) {
+  .chart-tabs {
+    overflow: auto;
+  }
+
+  .admin-chart-card {
+    padding: 0.25rem;
+  }
+  .chart-canvas-container{
+    width: 98%;
+  }
+  table-container{
+    overflow: auto;
+  }
+}

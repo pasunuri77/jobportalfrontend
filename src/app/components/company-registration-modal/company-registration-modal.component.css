@@ -24,13 +24,13 @@
 .modal-content {
   background: white;
   border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.16);
   width: 90%;
   max-width: 700px;
   max-height: 90vh;
   overflow-y: auto;
   animation: slideUp 0.3s ease-out;
-  border: 1px solid rgba(102, 126, 234, 0.1);
+  border: 1px solid rgba(175,153,255,0.06);
 }
 
 @keyframes slideUp {
@@ -49,8 +49,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 20px 25px;
-  border-bottom: 1px solid rgba(102, 126, 234, 0.1);
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-bottom: 1px solid rgba(175,153,255,0.06);
+  background: linear-gradient(135deg, #af99ff, #8b73e8);
   color: white;
   border-radius: 20px 20px 0 0;
   position: relative;
@@ -144,9 +144,9 @@ input[type="number"]:focus,
 select:focus,
 textarea:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #af99ff;
   background-color: white;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 3px rgba(175,153,255,0.08);
   transform: translateY(-1px);
 }
 
@@ -199,9 +199,9 @@ small {
 }
 
 .btn-submit {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #af99ff 0%, #8b73e8 100%);
   color: white;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+  box-shadow: 0 4px 15px rgba(175,153,255,0.12);
   position: relative;
   overflow: hidden;
 }
@@ -223,8 +223,8 @@ small {
 
 .btn-submit:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+  box-shadow: 0 8px 25px rgba(175,153,255,0.16);
+  background: linear-gradient(135deg, #af99ff 0%, #8b73e8 100%);
 }
 
 .btn-submit:disabled,
@@ -241,10 +241,10 @@ input[type="file"] {
 
 input[type="file"]::-webkit-file-upload-button {
   padding: 6px 14px;
-  border: 2px solid #667eea;
+  border: 2px solid #af99ff;
   border-radius: 8px;
   background-color: white;
-  color: #667eea;
+  color: #6b46c1;
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: 0.9rem;
@@ -252,11 +252,11 @@ input[type="file"]::-webkit-file-upload-button {
 }
 
 input[type="file"]::-webkit-file-upload-button:hover {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #af99ff 0%, #8b73e8 100%);
   color: white;
-  border-color: #667eea;
+  border-color: #af99ff;
   transform: translateY(-1px);
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+  box-shadow: 0 4px 15px rgba(175,153,255,0.12);
 }
 
 /* Responsive Design */

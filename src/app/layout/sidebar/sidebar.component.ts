@@ -18,15 +18,16 @@ export class SidebarComponent implements OnInit {
 
   menuItems = [
     { path: '/dashboard/profile', label: 'Profile', icon: 'user' },
+    { path: '/dashboard/apply-jobs', label: 'Applications', icon: 'file-text' },
+    { path: '/dashboard/jobs', label: 'Jobs', icon: 'work' },
     { path: '/dashboard/companies', label: 'Companies', icon: 'building' },
-    { path: '/dashboard/jobs', label: 'Jobs', icon: 'briefcase' },
-    { path: '/dashboard/apply-jobs', label: 'Applied Jobs', icon: 'apply' }
+    { path: '/dashboard/profile?tab=settings', label: 'Settings', icon: 'settings' }
   ];
 
   constructor(
     private router: Router,
     private authService: AuthService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.router.events
@@ -40,7 +41,19 @@ export class SidebarComponent implements OnInit {
   }
 
   navigateTo(path: string): void {
-    this.router.navigate([path]);
+    if (path.includes('?')) {
+      const parts = path.split('?');
+      const routeUrl = parts[0];
+      const paramsStr = parts[1];
+      const queryParams: any = {};
+      paramsStr.split('&').forEach(param => {
+        const pair = param.split('=');
+        queryParams[pair[0]] = pair[1];
+      });
+      this.router.navigate([routeUrl], { queryParams });
+    } else {
+      this.router.navigate([path]);
+    }
   }
 
   toggleSidebar(): void {
@@ -69,6 +82,11 @@ export class SidebarComponent implements OnInit {
   }
 
   isActive(path: string): boolean {
-    return this.activeRoute.includes(path);
+    const cleanPath = path.split('?')[0];
+    const cleanActive = this.activeRoute.split('?')[0];
+    if (cleanPath === '/dashboard') {
+      return cleanActive === '/dashboard' || cleanActive === '/dashboard/';
+    }
+    return cleanActive.includes(cleanPath);
   }
 }

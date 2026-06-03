@@ -1,23 +1,89 @@
 <header class="app-header">
   <div class="header-content">
-    <h1 class="app-title">Job Portal</h1>
-    
-    <div class="user-section">
-      <div class="user-profile">
-        <div class="user-avatar">
-          <span class="avatar-text">{{ (userName || userEmail || 'U').charAt(0).toUpperCase() }}</span>
+    <!-- Brand Title (Only shown in header if sidebar is collapsed, or as main title) -->
+    <div class="brand-section">
+      <div class="brand-logo">
+        <div class="brand-logo-circle">
+          <span class="material-icons-outlined brand-icon" aria-hidden="true">layers</span>
         </div>
-        <span class="user-email">{{ displayName }}</span>
+        <span class="brand-logo-text">JobPortal</span>
       </div>
-      
-      <button class="logout-btn" (click)="onLogout()" title="Logout">
-        <svg class="logout-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"></path>
-          <polyline points="16 17 21 12 16 7"></polyline>
-          <line x1="21" y1="12" x2="9" y2="12"></line>
-        </svg>
-        Logout
-      </button>
+
+
+    </div>
+
+    <!-- Search Section -->
+    <div class="search-container">
+      <div class="search-wrapper">
+        <span class="material-icons-outlined search-icon" aria-hidden="true">search</span>
+        <input type="text" class="search-input" placeholder="Search jobs, articles, or companies..." [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" />
+      </div>
+    </div>
+
+    <!-- User Action Controls -->
+    <div class="actions-section">
+      <!-- Notification Icon -->
+      <div class="notifications-container">
+        <button class="icon-btn" (click)="toggleNotifications()" aria-label="Notifications">
+          <span class="material-icons-outlined" aria-hidden="true">notifications</span>
+          <!-- <span class="badge" *ngIf="unreadNotificationsCount > 0">{{ unreadNotificationsCount }}</span> -->
+        </button>
+
+        <!-- Notifications Dropdown -->
+        <div class="dropdown-popover" *ngIf="notificationsOpen">
+          <div class="popover-header">
+            <h3>Notifications</h3>
+            <!-- <button class="clear-btn" (click)="markAllAsRead()">Mark all read</button> -->
+          </div>
+          <div class="popover-body">
+            <!-- <div class="notification-item" *ngFor="let note of notifications" [class.unread]="note.unread">
+              <span class="dot" *ngIf="note.unread"></span>
+              <div class="notification-text-wrapper">
+                <p class="notification-msg">{{ note.text }}</p>
+                <span class="notification-time">{{ note.time }}</span>
+              </div>
+            </div> -->
+            <div class="empty-state" *ngIf="notifications.length === 0">
+              No new notifications
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="divider-y"></div>
+
+      <!-- Profile Dropdown -->
+      <div class="profile-container">
+        <div class="user-profile" (click)="toggleDropdown()" [class.open]="dropdownOpen">
+          <div class="avatar-circle">
+            <span class="avatar-initials">{{ (userName || userEmail || 'U').charAt(0).toUpperCase() }}</span>
+            <div class="active-status"></div>
+          </div>
+          <div class="user-meta-info">
+            <span class="user-name">{{ displayName }}</span>
+            <span class="user-role">{{ userRole }}</span>
+          </div>
+          <span class="material-icons-outlined chevron-icon" aria-hidden="true">expand_more</span>
+        </div>
+
+        <!-- User Dropdown Menu -->
+        <div class="dropdown-menu" *ngIf="dropdownOpen">
+          <div class="dropdown-profile-header">
+            <p class="header-name">{{ displayName }}</p>
+            <p class="header-email">{{ userEmail }}</p>
+          </div>
+          <button class="dropdown-link" (click)="router.navigate(['/dashboard/profile'])">
+            <span class="material-icons-outlined" aria-hidden="true">person</span>
+            {{ displayName }}
+          </button>
+          <div class="dropdown-divider"></div>
+          <button class="logout-item" (click)="onLogout()">
+            <span class="material-icons-outlined" aria-hidden="true">logout</span>
+            Logout
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </header>

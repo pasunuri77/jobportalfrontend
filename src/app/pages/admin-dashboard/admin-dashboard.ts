@@ -1,13 +1,15 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from '../../layout/header/header.component';
+import { ReusableTableComponent, TableConfig } from '../../ui-components/reusable-table/reusable-table.component';
 import { AuthService } from '../../service/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, interval, takeUntil } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { environment } from '../../../environment/environment';
+import { AdminStatusChart } from '../../charts/admin-status-chart/admin-status-chart';
 
 interface DashboardStats {
   totalUsers: number;
@@ -26,11 +28,11 @@ interface PaginationData {
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterOutlet, HeaderComponent],
+  imports: [CommonModule, FormsModule, RouterOutlet, HeaderComponent, ReusableTableComponent, AdminStatusChart],
   templateUrl: './admin-dashboard.html',
   styleUrl: './admin-dashboard.css',
 })
-export class AdminDashboardComponent implements OnInit, OnDestroy {
+export class AdminDashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   // Data arrays
   user: any[] = [];
   company: any[] = [];
@@ -54,11 +56,126 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     applicants: { page: 1, limit: 6 },
   };
 
+  // Table Configuration
+  usersTableConfig: TableConfig = {
+    columns: [
+      { key: 'id', label: 'ID', sortable: true, width: '70px', type: 'number' },
+      { key: 'name', label: 'Name', sortable: true },
+      { key: 'email', label: 'Email', sortable: true },
+      { key: 'role', label: 'Role', type: 'badge', sortable: true,
+        badgeClass: (value) => {
+          switch(value?.toLowerCase()) {
+            case 'admin':
+              return 'status-active';
+            case 'company':
+              return 'role-company';
+            default:
+              return 'role-user';
+          }
+        }
+      },
+      { key: 'delete', label: 'Actions', type: 'action' }
+    ],
+    pageSize: 10,
+    striped: true,
+    bordered: true,
+    hoverable: true,
+    selectable: false
+  };
+
+  // Caching configs to prevent repeated template generation on change detection
+  private cachedCompaniesConfig: TableConfig | null = null;
+  private cachedJobsConfig: TableConfig | null = null;
+  private cachedApplicantsConfig: TableConfig | null = null;
+
+  getCompaniesTableConfig(logoCol: any, ratingCol: any, actionsCol: any): TableConfig {
+    if (this.cachedCompaniesConfig) return this.cachedCompaniesConfig;
+    if (!logoCol) return { columns: [] };
+    
+    this.cachedCompaniesConfig = {
+      columns: [
+        { key: 'logo', label: 'Logo', type: 'custom', customTemplate: logoCol, width: '90px' },
+        { key: 'name', label: 'Company Name', sortable: true },
+        { key: 'industry', label: 'Industry', sortable: true },
+        { key: 'location', label: 'Location', sortable: true },
+        { key: 'size', label: 'Size', sortable: true },
+        { key: 'rating', label: 'Rating', type: 'custom', customTemplate: ratingCol, sortable: true },
+        { key: 'openPositions', label: 'Open Positions', sortable: true },
+        { key: 'actions', label: 'Actions', type: 'custom', customTemplate: actionsCol }
+      ],
+      pageSize: 6,
+      striped: true,
+      bordered: true,
+      hoverable: true,
+      selectable: false
+    };
+    return this.cachedCompaniesConfig;
+  }
+
+  getJobsTableConfig(applicantsCol: any, actionsCol: any): TableConfig {
+    if (this.cachedJobsConfig) return this.cachedJobsConfig;
+    if (!applicantsCol) return { columns: [] };
+    
+    this.cachedJobsConfig = {
+      columns: [
+        { key: 'title', label: 'Job Title', sortable: true },
+        { key: 'type', label: 'Type', type: 'badge', sortable: true,
+          badgeClass: (value) => {
+            return 'type-' + (value?.toLowerCase().replace('_', '-') || 'full-time');
+          }
+        },
+        { key: 'location', label: 'Location', sortable: true },
+        { key: 'salary', label: 'Salary', sortable: true },
+        { key: 'applicants', label: 'Applicants', type: 'custom', customTemplate: applicantsCol },
+        { key: 'actions', label: 'Actions', type: 'custom', customTemplate: actionsCol }
+      ],
+      pageSize: 6,
+      striped: true,
+      bordered: true,
+      hoverable: true,
+      selectable: false
+    };
+    return this.cachedJobsConfig;
+  }
+
+  getApplicantsTableConfig(userCol: any, jobCol: any, resumeCol: any, actionsCol: any): TableConfig {
+    if (this.cachedApplicantsConfig) return this.cachedApplicantsConfig;
+    if (!userCol) return { columns: [] };
+    
+    this.cachedApplicantsConfig = {
+      columns: [
+        { key: 'user', label: 'Applicant', type: 'custom', customTemplate: userCol },
+        { key: 'job', label: 'Job Details', type: 'custom', customTemplate: jobCol },
+        { key: 'status', label: 'Status', type: 'badge', sortable: true,
+          badgeClass: (value) => {
+            return 'status-' + (value?.toLowerCase() || 'applied');
+          }
+        },
+        { key: 'resume', label: 'Resume', type: 'custom', customTemplate: resumeCol },
+        { key: 'actions', label: 'Actions', type: 'custom', customTemplate: actionsCol }
+      ],
+      pageSize: 6,
+      striped: true,
+      bordered: true,
+      hoverable: true,
+      selectable: false
+    };
+    return this.cachedApplicantsConfig;
+  }
+
+  ngAfterViewInit() {
+    // Empty definition since we bind directly in template
+  }
+
   // Loading and visibility states
   showUsers: boolean = false;
   showCompanies: boolean = false;
   showJobs: boolean = false;
   showApplicants: boolean = false;
+
+  get isAnySectionOpen(): boolean {
+    return this.showUsers || this.showCompanies || this.showJobs || this.showApplicants;
+  }
 
   isLoadingUsers: boolean = false;
   isLoadingCompanies: boolean = false;
@@ -92,6 +209,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
   // Expanded items
   expandedJobs: Set<number> = new Set();
+  expandedCompanies: Set<string> = new Set();
 
   constructor(
     private authService: AuthService,
@@ -226,26 +344,46 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
    * Toggle section visibility
    */
   toggleUsers(): void {
-    this.showUsers = !this.showUsers;
-    if (this.showUsers && this.user.length === 0) this.loadUsers();
+    const opening = !this.showUsers;
+    this.showUsers = opening;
+    this.showCompanies = false;
+    this.showJobs = false;
+    this.showApplicants = false;
+
+    if (opening && this.user.length === 0) this.loadUsers();
     this.cdr.detectChanges();
   }
 
   toggleCompanies(): void {
-    this.showCompanies = !this.showCompanies;
-    if (this.showCompanies && this.company.length === 0) this.loadCompanies();
+    const opening = !this.showCompanies;
+    this.showCompanies = opening;
+    this.showUsers = false;
+    this.showJobs = false;
+    this.showApplicants = false;
+
+    if (opening && this.company.length === 0) this.loadCompanies();
     this.cdr.detectChanges();
   }
 
   toggleJobs(): void {
-    this.showJobs = !this.showJobs;
-    if (this.showJobs && this.jobs.length === 0) this.loadJobs();
+    const opening = !this.showJobs;
+    this.showJobs = opening;
+    this.showUsers = false;
+    this.showCompanies = false;
+    this.showApplicants = false;
+
+    if (opening && this.jobs.length === 0) this.loadJobs();
     this.cdr.detectChanges();
   }
 
   toggleApplicants(): void {
-    this.showApplicants = !this.showApplicants;
-    if (this.showApplicants && this.applicants.length === 0) this.loadApplications();
+    const opening = !this.showApplicants;
+    this.showApplicants = opening;
+    this.showUsers = false;
+    this.showCompanies = false;
+    this.showJobs = false;
+
+    if (opening && this.applicants.length === 0) this.loadApplications();
     this.cdr.detectChanges();
   }
 
@@ -409,6 +547,20 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Handle user table actions (from reusable table component)
+   */
+  onUserTableAction(event: { action: string; row: any }): void {
+    if (event.action === 'delete') {
+      // Check if user is admin (cannot delete admin users)
+      if (event.row.role === 'ADMIN') {
+        this.toastr.warning('Cannot delete admin users', 'Warning');
+        return;
+      }
+      this.showDeleteConfirmation('user', event.row.id, event.row.name);
+    }
+  }
+
+  /**
    * Close delete confirmation modal
    */
   closeDeleteConfirmation(): void {
@@ -561,6 +713,20 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
   isJobExpanded(jobId: number): boolean {
     return this.expandedJobs.has(jobId);
+  }
+
+  toggleCompanyDescription(companyId: any): void {
+    const idStr = companyId?.toString();
+    if (this.expandedCompanies.has(idStr)) {
+      this.expandedCompanies.delete(idStr);
+    } else {
+      this.expandedCompanies.add(idStr);
+    }
+    this.cdr.detectChanges();
+  }
+
+  isCompanyExpanded(companyId: any): boolean {
+    return this.expandedCompanies.has(companyId?.toString());
   }
 
   /**

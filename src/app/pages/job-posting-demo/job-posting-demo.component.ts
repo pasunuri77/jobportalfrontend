@@ -18,7 +18,7 @@ import { JobPostingComponent } from '../../components/job-posting/job-posting.co
   `,
   styles: [`
     .demo-container {
-      min-height: 100vh;
+      height: 100vh;
       background: #f8f9fa;
       padding: 2rem;
     }

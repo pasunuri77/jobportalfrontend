@@ -15,6 +15,7 @@ export class Viewallapplications implements OnInit {
   applications: any[] = [];
   jobsList: any[] = [];
   expandedJobs: Set<number> = new Set();
+  showingAllApplicants: Set<number> = new Set();
   isLoading: boolean = true;
   errorMessage: string = '';
 
@@ -25,6 +26,18 @@ export class Viewallapplications implements OnInit {
 
   ngOnInit(): void {
     this.loadApplications();
+  }
+
+  toggleApplicants(jobId: number): void {
+    if (this.showingAllApplicants.has(jobId)) {
+      this.showingAllApplicants.delete(jobId);
+    } else {
+      this.showingAllApplicants.add(jobId);
+    }
+  }
+
+  isShowingAll(jobId: number): boolean {
+    return this.showingAllApplicants.has(jobId);
   }
 
   loadApplications(): void {
@@ -147,6 +160,9 @@ export class Viewallapplications implements OnInit {
 
   getResumeUrl(resumePath: string): string {
     if (!resumePath) return '';
+    if (resumePath.startsWith('http://') || resumePath.startsWith('https://')) {
+      return resumePath;
+    }
     return `${environment.apiUrl}${resumePath.startsWith('/') ? '' : '/'}${resumePath}`;
   }
 }

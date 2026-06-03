@@ -1,0 +1,148 @@
+<div class="admin-chart-card" [class.compact]="isCompact">
+  <div class="chart-card-header">
+    <div class="header-left">
+      <div class="chart-icon-box">
+        <span class="material-icons-outlined">insights</span>
+      </div>
+      <div>
+        <h3>System Analytics</h3>
+        <p class="chart-subtitle" *ngIf="!isCompact">Visual metrics</p>
+      </div>
+    </div>
+    
+    <!-- Tab Navigation -->
+    <div class="chart-tabs">
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab === 'overview'" 
+        (click)="setActiveTab('overview')"
+        title="Overview">
+        <span class="material-icons-outlined">dashboard</span>
+        <span class="tab-text">Overview</span>
+      </button>
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab === 'roles'" 
+        (click)="setActiveTab('roles')"
+        title="User Roles">
+        <span class="material-icons-outlined">people</span>
+        <span class="tab-text">Roles</span>
+      </button>
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab === 'jobTypes'" 
+        (click)="setActiveTab('jobTypes')"
+        title="Job Types">
+        <span class="material-icons-outlined">work_outline</span>
+        <span class="tab-text">Jobs</span>
+      </button>
+      <button 
+        class="tab-btn" 
+        [class.active]="activeTab === 'applications'" 
+        (click)="setActiveTab('applications')"
+        title="Applications">
+        <span class="material-icons-outlined">description</span>
+        <span class="tab-text">Apps</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="chart-body" [class.compact]="isCompact">
+    <!-- Chart Container -->
+    <div class="chart-canvas-container">
+      <canvas #chartCanvas></canvas>
+    </div>
+
+    <!-- Stats Summary Sidebar -->
+    <div class="stats-summary-sidebar" *ngIf="!isCompact">
+      <div class="summary-title">Quick Highlights</div>
+      
+      <div class="summary-list" *ngIf="activeTab === 'overview'">
+        <div class="summary-item">
+          <span class="dot users-dot"></span>
+          <span class="label">Total Users</span>
+          <span class="value">{{ users.length }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="dot companies-dot"></span>
+          <span class="label">Companies Registered</span>
+          <span class="value">{{ companies.length }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="dot jobs-dot"></span>
+          <span class="label">Jobs Posted</span>
+          <span class="value">{{ jobs.length }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="dot applicants-dot"></span>
+          <span class="label">Applications Submitted</span>
+          <span class="value">{{ applicants.length }}</span>
+        </div>
+      </div>
+
+      <div class="summary-list" *ngIf="activeTab === 'roles'">
+        <div class="summary-item">
+          <span class="dot admin-dot"></span>
+          <span class="label">Admins</span>
+          <span class="value">{{ getRoleCount('ADMIN') }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="dot company-role-dot"></span>
+          <span class="label">Company Reps</span>
+          <span class="value">{{ getRoleCount('COMPANY') }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="dot seeker-dot"></span>
+          <span class="label">Job Seekers</span>
+          <span class="value">{{ getRoleCount('USER') }}</span>
+        </div>
+      </div>
+
+      <div class="summary-list" *ngIf="activeTab === 'jobTypes'">
+        <div class="summary-item">
+          <span class="dot fulltime-dot"></span>
+          <span class="label">Full Time</span>
+          <span class="value">{{ getJobTypeCount('FULL_TIME') }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="dot parttime-dot"></span>
+          <span class="label">Part Time</span>
+          <span class="value">{{ getJobTypeCount('PART_TIME') }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="dot contract-dot"></span>
+          <span class="label">Contract</span>
+          <span class="value">{{ getJobTypeCount('CONTRACT') }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="dot internship-dot"></span>
+          <span class="label">Internships</span>
+          <span class="value">{{ getJobTypeCount('INTERNSHIP') }}</span>
+        </div>
+      </div>
+
+      <div class="summary-list" *ngIf="activeTab === 'applications'">
+        <div class="summary-item">
+          <span class="dot applied-dot"></span>
+          <span class="label">Applied (Pending)</span>
+          <span class="value">{{ getApplicationStatusCount('APPLIED') }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="dot selected-dot"></span>
+          <span class="label">Selected (Hired)</span>
+          <span class="value">{{ getApplicationStatusCount('SELECTED') }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="dot rejected-dot"></span>
+          <span class="label">Rejected</span>
+          <span class="value">{{ getApplicationStatusCount('REJECTED') }}</span>
+        </div>
+      </div>
+      
+      <div class="sidebar-footer">
+        <span class="material-icons-outlined auto-renew-icon">sync</span>
+        <span>Auto-syncs with dashboard data</span>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,42 +1,55 @@
 .dashboard-layout {
   min-height: 100vh;
   background: #f8fafc;
+  overflow-x: hidden;
 }
 
 .dashboard-content {
   display: flex;
-  margin-top: 60px;
-  min-height: calc(100vh - 60px);
+  align-items: stretch;
+  gap: 0;
+  margin-top: 0;
+  /* header space handled by body padding-top */
+  height: calc(100vh - 60px);
+  width: 100%;
 }
 
 .main-content {
-  flex: 1;
-  margin-left: 250px;
+  flex: 1 1 auto;
+  width: auto;
   background: #f8fafc;
-  min-height: calc(100vh - 60px);
-  transition: margin-left 0.3s ease;
+  /* main content should scroll within the available viewport area */
+  max-height: calc(100vh - 60px);
+  overflow-y: auto;
+  transition: padding 0.2s ease, width 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
+  padding: 1.5rem 2rem;
+  box-sizing: border-box;
+  margin-top: 50px;
 }
 
 .main-content::before {
   content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  position: absolute;
+  inset: 0;
   background: linear-gradient(135deg, rgba(102, 126, 234, 0.02), rgba(118, 75, 162, 0.02));
   z-index: -1;
 }
 
-/* Global styles for sidebar interaction */
-:global(.sidebar.collapsed) ~ .main-content {
-  margin-left: 70px;
+/* Sidebar is in-flow; when collapsed the JS updates `--sidebar-current-width` and flex handles sizing. */
+.dashboard-content>.sidebar+.main-content>* {
+  max-width: none;
 }
 
 @media (max-width: 768px) {
   .main-content {
-    margin-left: 70px;
-    padding: 1rem;
+    padding: 0;
   }
+ 
+}
+@media (max-width: 480px) {
+  .tabs-navigation {
+   display: block;
+  }
+ 
 }

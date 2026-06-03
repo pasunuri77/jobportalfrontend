@@ -28,7 +28,7 @@
   padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  border-bottom: 3px solid #667eea;
+  border-bottom: 3px solid rgba(175, 153, 255, 0.6);
   margin-bottom: 2rem;
 }
 
@@ -54,7 +54,7 @@
 }
 
 .refresh-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #af99ff, #8b73e8);
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -97,7 +97,7 @@
 }
 
 .stat-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #af99ff, #8b73e8);
   color: white;
   padding: 1.5rem;
   border-radius: 12px;
@@ -125,7 +125,7 @@
   transform: translateY(0);
 }
 
-.stat-card > * {
+.stat-card>* {
   position: relative;
   z-index: 1;
 }
@@ -191,7 +191,7 @@
   align-items: center;
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 2px solid #667eea;
+  border-bottom: 2px solid rgba(175, 153, 255, 0.6);
 }
 
 .section-header h2 {
@@ -202,7 +202,7 @@
 }
 
 .badge {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #af99ff, #8b73e8);
   color: white;
   padding: 0.4rem 0.9rem;
   border-radius: 20px;
@@ -238,7 +238,7 @@
 .search-input:focus,
 .filter-select:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: rgba(175, 153, 255, 0.45);
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
@@ -272,6 +272,7 @@
   0% {
     background-position: 200% 0;
   }
+
   100% {
     background-position: -200% 0;
   }
@@ -300,7 +301,7 @@
 }
 
 .user-card:hover {
-  border-color: #667eea;
+  border-color: rgba(175, 153, 255, 0.45);
   box-shadow: 0 8px 24px rgba(102, 126, 234, 0.15);
   transform: translateY(-4px);
 }
@@ -318,7 +319,7 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #af99ff, #8b73e8);
   color: white;
   display: flex;
   align-items: center;
@@ -387,7 +388,7 @@
 }
 
 .company-card:hover {
-  border-color: #667eea;
+  border-color: rgba(175, 153, 255, 0.45);
   box-shadow: 0 8px 24px rgba(102, 126, 234, 0.15);
   transform: translateX(4px);
 }
@@ -454,8 +455,8 @@
 }
 
 .job-card:hover {
-  border-color: #667eea;
-  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.15);
+  border-color: rgba(175, 153, 255, 0.18);
+  box-shadow: 0 8px 24px rgba(175, 153, 255, 0.12);
 }
 
 .job-header {
@@ -540,11 +541,11 @@
 
 .applicant-count {
   font-weight: 600;
-  color: #667eea;
+  color: #8b73e8;
 }
 
 .expand-icon {
-  color: #667eea;
+  color: #8b73e8;
   font-weight: bold;
   font-size: 1rem;
   transition: transform 0.3s ease;
@@ -567,6 +568,7 @@
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -659,7 +661,7 @@
   width: 45px;
   height: 45px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #af99ff, #8b73e8);
   color: white;
   display: flex;
   align-items: center;
@@ -733,12 +735,12 @@
 
 .status-select:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: rgba(175, 153, 255, 0.45);
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 .resume-link {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #af99ff, #8b73e8);
   color: white;
   padding: 0.75rem 1rem;
   border-radius: 6px;
@@ -916,6 +918,7 @@
     transform: translateY(30px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -1011,6 +1014,7 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -1185,7 +1189,12 @@
   }
 
   .dashboard-stats {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 0.625rem;
+  }
+
+  .chart-tabs {
+    overflow: auto;
   }
 
   .stat-card {

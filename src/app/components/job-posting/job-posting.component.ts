@@ -16,10 +16,10 @@ import { environment } from '../../../environment/environment';
 export class JobPostingComponent implements OnInit {
   // Input property for editing
   @Input() jobData: any = null;
-  
+
   // Output event emitter for job updates
   @Output() jobUpdated = new EventEmitter<void>();
-  
+
   // Form fields
   title: string = '';
   companyName: string = '';
@@ -68,15 +68,15 @@ export class JobPostingComponent implements OnInit {
       this.salary = this.jobData.salary || '';
       this.posted = this.jobData.posted || new Date().toISOString();
       this.description = this.jobData.description || '';
-      this.requirements = this.jobData.requirements ? 
-        Array.isArray(this.jobData.requirements) ? 
-          this.jobData.requirements.join(', ') : 
+      this.requirements = this.jobData.requirements ?
+        Array.isArray(this.jobData.requirements) ?
+          this.jobData.requirements.join(', ') :
           this.jobData.requirements : '';
-      
+
       // Set logo preview if available
       if (this.jobData.logo) {
-        this.logoPreview = this.jobData.logo.startsWith('http') ? 
-          this.jobData.logo : 
+        this.logoPreview = this.jobData.logo.startsWith('http') ?
+          this.jobData.logo :
           `${environment.apiUrl}${this.jobData.logo}`;
       }
     }
@@ -135,7 +135,7 @@ export class JobPostingComponent implements OnInit {
           this.isSubmitting = false;
           this.isEditMode = false;
           this.jobData = null;
-          
+
           // Emit event to notify parent component
           this.jobUpdated.emit();
         },
@@ -154,14 +154,14 @@ export class JobPostingComponent implements OnInit {
           this.toastr.success('Job posted successfully!', 'Success');
           this.resetForm();
           this.isSubmitting = false;
-          
+
           // Emit event to notify parent component
           this.jobUpdated.emit();
         },
         error: (error) => {
           console.error('Error posting job:', error);
           this.toastr.error('Failed to post job. Please try again.', 'Error');
-            this.isSubmitting = false;
+          this.isSubmitting = false;
         },
         complete: () => {
           console.log('Job creation observable completed');
