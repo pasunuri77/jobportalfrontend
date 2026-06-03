@@ -126,7 +126,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy, AfterViewInit
             return 'type-' + (value?.toLowerCase().replace('_', '-') || 'full-time');
           }
         },
-        { key: 'name', label: 'Company Name', sortable: true },
         { key: 'location', label: 'Location', sortable: true },
         { key: 'salary', label: 'Salary', sortable: true },
         { key: 'applicants', label: 'Applicants', type: 'custom', customTemplate: applicantsCol },
